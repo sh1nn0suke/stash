@@ -37,7 +37,7 @@ func BenchmarkOsHash(b *testing.B) {
 func TestFromReader(t *testing.T) {
 	makeByteArray := func(base []byte, mag int) []byte {
 		ret := base
-		for i := 0; i < mag; i++ {
+		for range mag {
 			ret = append(ret, ret...)
 		}
 		return ret

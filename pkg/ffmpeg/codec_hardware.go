@@ -133,11 +133,12 @@ func (f *FFMpeg) initHWSupport(ctx context.Context) {
 		}
 	}
 
-	outstr := fmt.Sprintf("[InitHWSupport] Supported HW codecs [%d]:\n", len(hwCodecSupport))
+	var outstr strings.Builder
+	outstr.WriteString(fmt.Sprintf("[InitHWSupport] Supported HW codecs [%d]:\n", len(hwCodecSupport)))
 	for _, codec := range hwCodecSupport {
-		outstr += fmt.Sprintf("\t%s - %s\n", codec.Name, codec.CodeName)
+		outstr.WriteString(fmt.Sprintf("\t%s - %s\n", codec.Name, codec.CodeName))
 	}
-	logger.Info(outstr)
+	logger.Info(outstr.String())
 
 	f.hwCodecSupportMutex.Lock()
 	defer f.hwCodecSupportMutex.Unlock()

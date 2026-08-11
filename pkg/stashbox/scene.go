@@ -110,10 +110,7 @@ func (c Client) findScenesByFingerprints(ctx context.Context, scenes [][]*graphq
 	var ignoredTags []string
 
 	for i := 0; i < len(validScenes); i += 40 {
-		end := i + 40
-		if end > len(validScenes) {
-			end = len(validScenes)
-		}
+		end := min(i+40, len(validScenes))
 		scenes, err := c.client.FindScenesBySceneFingerprints(ctx, validScenes[i:end])
 
 		if err != nil {

@@ -401,7 +401,7 @@ func (qb *GroupStore) FindByNames(ctx context.Context, names []string, nocase bo
 		where += " COLLATE NOCASE"
 	}
 	where += " IN " + getInBinding(len(names))
-	var args []interface{}
+	var args []any
 	for _, name := range names {
 		args = append(args, name)
 	}
@@ -557,7 +557,7 @@ func (qb *GroupStore) setGroupSort(query *queryBuilder, findFilter *models.FindF
 	return nil
 }
 
-func (qb *GroupStore) queryGroups(ctx context.Context, query string, args []interface{}) ([]*models.Group, error) {
+func (qb *GroupStore) queryGroups(ctx context.Context, query string, args []any) ([]*models.Group, error) {
 	const single = false
 	var ret []*models.Group
 	if err := groupRepository.queryFunc(ctx, query, args, single, func(r *sqlx.Rows) error {
@@ -619,7 +619,7 @@ INNER JOIN groups_scenes ON groups.id = groups_scenes.group_id
 INNER JOIN performers_scenes ON performers_scenes.scene_id = groups_scenes.scene_id
 WHERE performers_scenes.performer_id = ?
 `
-	args := []interface{}{performerID}
+	args := []any{performerID}
 	return qb.queryGroups(ctx, query, args)
 }
 
@@ -629,7 +629,7 @@ FROM groups_scenes
 INNER JOIN performers_scenes ON performers_scenes.scene_id = groups_scenes.scene_id
 WHERE performers_scenes.performer_id = ?
 `
-	args := []interface{}{performerID}
+	args := []any{performerID}
 	return groupRepository.runCountQuery(ctx, query, args)
 }
 
@@ -638,7 +638,7 @@ func (qb *GroupStore) FindByStudioID(ctx context.Context, studioID int) ([]*mode
 FROM groups
 WHERE groups.studio_id = ?
 `
-	args := []interface{}{studioID}
+	args := []any{studioID}
 	return qb.queryGroups(ctx, query, args)
 }
 
@@ -647,7 +647,7 @@ func (qb *GroupStore) CountByStudioID(ctx context.Context, studioID int) (int, e
 FROM groups
 WHERE groups.studio_id = ?
 `
-	args := []interface{}{studioID}
+	args := []any{studioID}
 	return groupRepository.runCountQuery(ctx, query, args)
 }
 

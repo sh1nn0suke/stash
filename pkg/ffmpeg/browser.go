@@ -3,6 +3,7 @@ package ffmpeg
 import (
 	"errors"
 	"fmt"
+	"slices"
 )
 
 // only support H264 by default, since Safari does not support VP8/VP9
@@ -54,12 +55,7 @@ func IsStreamable(videoCodec string, audioCodec ProbeAudioCodec, container Conta
 }
 
 func isValidCodec(codecName string, supportedCodecs []string) bool {
-	for _, c := range supportedCodecs {
-		if c == codecName {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(supportedCodecs, codecName)
 }
 
 func isValidAudio(audio ProbeAudioCodec, validCodecs []ProbeAudioCodec) bool {
@@ -69,13 +65,7 @@ func isValidAudio(audio ProbeAudioCodec, validCodecs []ProbeAudioCodec) bool {
 		return true
 	}
 
-	for _, c := range validCodecs {
-		if c == audio {
-			return true
-		}
-	}
-
-	return false
+	return slices.Contains(validCodecs, audio)
 }
 
 // IsValidAudioForContainer returns true if the audio codec is valid for the container.
@@ -127,10 +117,5 @@ func isValidCombo(codecName string, format Container, supportedVideoCodecs []str
 }
 
 func isValidForContainer(format Container, validContainers []Container) bool {
-	for _, fmt := range validContainers {
-		if fmt == format {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(validContainers, format)
 }

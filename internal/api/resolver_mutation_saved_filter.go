@@ -75,7 +75,7 @@ func (r *mutationResolver) SetDefaultFilter(ctx context.Context, input SetDefaul
 
 	uiConfig := config.GetUIConfiguration()
 	if uiConfig == nil {
-		uiConfig = make(map[string]interface{})
+		uiConfig = make(map[string]any)
 	}
 
 	m := utils.NestedMap(uiConfig)
@@ -92,7 +92,7 @@ func (r *mutationResolver) SetDefaultFilter(ctx context.Context, input SetDefaul
 		return true, nil
 	}
 
-	subMap := make(map[string]interface{})
+	subMap := make(map[string]any)
 	d, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
 		TagName:          "json",
 		WeaklyTypedInput: true,

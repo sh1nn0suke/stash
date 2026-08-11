@@ -2,6 +2,7 @@ package signedurl
 
 import (
 	"errors"
+	"maps"
 	"net/url"
 	"strconv"
 	"testing"
@@ -226,9 +227,7 @@ func TestMissingParamsFails(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			params := make(url.Values)
-			for k, v := range full {
-				params[k] = v
-			}
+			maps.Copy(params, full)
 			params.Del(tt.missing)
 
 			_, err := VerifyURL("/scene/1/stream", params, secret)

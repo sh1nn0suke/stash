@@ -76,7 +76,7 @@ func (me *contentDirectoryService) updateIDString() string {
 	return fmt.Sprintf("%d", uint32(os.Getpid()))
 }
 
-func sceneToContainer(scene *models.Scene, parent string, host string) interface{} {
+func sceneToContainer(scene *models.Scene, parent string, host string) any {
 	// make stash server URL
 	// TODO - fix this
 	iconURI := (&url.URL{
@@ -231,7 +231,7 @@ func (me *contentDirectoryService) handleBrowseDirectChildren(obj object, host s
 	// TODO: check if obj == 0 and return root objects
 	// TODO: check if special path and return files
 
-	var objs []interface{}
+	var objs []any
 
 	if obj.IsRoot() {
 		objs = getRootObjects()
@@ -338,7 +338,7 @@ func (me *contentDirectoryService) handleBrowseDirectChildren(obj object, host s
 }
 
 func (me *contentDirectoryService) handleBrowseMetadata(obj object, host string) (map[string]string, error) {
-	var objs []interface{}
+	var objs []any
 	var updateID string
 
 	// if numeric, then must be scene, otherwise handle as if path
@@ -351,7 +351,7 @@ func (me *contentDirectoryService) handleBrowseMetadata(obj object, host string)
 			// HACK: just create a fake storage folder to return. The name won't
 			// be correct, but hopefully the names returned from handleBrowseDirectChildren
 			// will be used instead.
-			objs = []interface{}{makeStorageFolder(obj.ID(), obj.ID(), obj.ParentID())}
+			objs = []any{makeStorageFolder(obj.ID(), obj.ID(), obj.ParentID())}
 		}
 
 		updateID = me.updateIDString()
@@ -376,7 +376,7 @@ func (me *contentDirectoryService) handleBrowseMetadata(obj object, host string)
 
 		if scene != nil {
 			upnpObject := sceneToContainer(scene, "-1", host)
-			objs = []interface{}{upnpObject}
+			objs = []any{upnpObject}
 
 			// http://upnp.org/specs/av/UPnP-av-ContentDirectory-v1-Service.pdf
 			// maximum update ID is 2**32, then rolls back to 0
@@ -390,7 +390,7 @@ func (me *contentDirectoryService) handleBrowseMetadata(obj object, host string)
 	return makeBrowseResult(objs, updateID)
 }
 
-func makeBrowseResult(objs []interface{}, updateID string) (map[string]string, error) {
+func makeBrowseResult(objs []any, updateID string) (map[string]string, error) {
 	result, err := xml.Marshal(objs)
 	if err != nil {
 		return nil, upnp.Errorf(upnp.ActionFailedErrorCode, "could not marshal objects: %s", err.Error())
@@ -418,16 +418,16 @@ func makeStorageFolder(id, title, parentID string) upnpav.Container {
 	}
 }
 
-func getRootObject() []interface{} {
+func getRootObject() []any {
 	const rootID = "0"
 
-	return []interface{}{makeStorageFolder(rootID, "stash", "-1")}
+	return []any{makeStorageFolder(rootID, "stash", "-1")}
 }
 
-func getRootObjects() []interface{} {
+func getRootObjects() []any {
 	const rootID = "0"
 
-	var objs []interface{}
+	var objs []any
 
 	objs = append(objs, makeStorageFolder("all", "all", rootID))
 	objs = append(objs, makeStorageFolder("performers", "performers", rootID))
@@ -448,8 +448,8 @@ func getSortDirection(sceneFilter *models.SceneFilterType, sort string) models.S
 	return direction
 }
 
-func (me *contentDirectoryService) getVideos(sceneFilter *models.SceneFilterType, parentID string, host string) []interface{} {
-	var objs []interface{}
+func (me *contentDirectoryService) getVideos(sceneFilter *models.SceneFilterType, parentID string, host string) []any {
+	var objs []any
 
 	r := me.repository
 	if err := r.WithReadTxn(context.TODO(), func(ctx context.Context) error {
@@ -494,8 +494,8 @@ func (me *contentDirectoryService) getVideos(sceneFilter *models.SceneFilterType
 	return objs
 }
 
-func (me *contentDirectoryService) getPageVideos(sceneFilter *models.SceneFilterType, parentID string, page int, host string) []interface{} {
-	var objs []interface{}
+func (me *contentDirectoryService) getPageVideos(sceneFilter *models.SceneFilterType, parentID string, page int, host string) []any {
+	var objs []any
 
 	r := me.repository
 	if err := r.WithReadTxn(context.TODO(), func(ctx context.Context) error {
@@ -534,12 +534,12 @@ func getPageFromID(paths []string) *int {
 	return &ret
 }
 
-func (me *contentDirectoryService) getAllScenes(host string) []interface{} {
+func (me *contentDirectoryService) getAllScenes(host string) []any {
 	return me.getVideos(&models.SceneFilterType{}, "all", host)
 }
 
-func (me *contentDirectoryService) getStudios() []interface{} {
-	var objs []interface{}
+func (me *contentDirectoryService) getStudios() []any {
+	var objs []any
 
 	r := me.repository
 	if err := r.WithReadTxn(context.TODO(), func(ctx context.Context) error {
@@ -560,7 +560,7 @@ func (me *contentDirectoryService) getStudios() []interface{} {
 	return objs
 }
 
-func (me *contentDirectoryService) getStudioScenes(paths []string, host string) []interface{} {
+func (me *contentDirectoryService) getStudioScenes(paths []string, host string) []any {
 	sceneFilter := &models.SceneFilterType{
 		Studios: &models.HierarchicalMultiCriterionInput{
 			Modifier: models.CriterionModifierIncludes,
@@ -578,8 +578,8 @@ func (me *contentDirectoryService) getStudioScenes(paths []string, host string) 
 	return me.getVideos(sceneFilter, parentID, host)
 }
 
-func (me *contentDirectoryService) getTags() []interface{} {
-	var objs []interface{}
+func (me *contentDirectoryService) getTags() []any {
+	var objs []any
 
 	r := me.repository
 	if err := r.WithReadTxn(context.TODO(), func(ctx context.Context) error {
@@ -600,7 +600,7 @@ func (me *contentDirectoryService) getTags() []interface{} {
 	return objs
 }
 
-func (me *contentDirectoryService) getTagScenes(paths []string, host string) []interface{} {
+func (me *contentDirectoryService) getTagScenes(paths []string, host string) []any {
 	sceneFilter := &models.SceneFilterType{
 		Tags: &models.HierarchicalMultiCriterionInput{
 			Modifier: models.CriterionModifierIncludes,
@@ -618,8 +618,8 @@ func (me *contentDirectoryService) getTagScenes(paths []string, host string) []i
 	return me.getVideos(sceneFilter, parentID, host)
 }
 
-func (me *contentDirectoryService) getPerformers() []interface{} {
-	var objs []interface{}
+func (me *contentDirectoryService) getPerformers() []any {
+	var objs []any
 
 	r := me.repository
 	if err := r.WithReadTxn(context.TODO(), func(ctx context.Context) error {
@@ -640,7 +640,7 @@ func (me *contentDirectoryService) getPerformers() []interface{} {
 	return objs
 }
 
-func (me *contentDirectoryService) getPerformerScenes(paths []string, host string) []interface{} {
+func (me *contentDirectoryService) getPerformerScenes(paths []string, host string) []any {
 	sceneFilter := &models.SceneFilterType{
 		Performers: &models.MultiCriterionInput{
 			Modifier: models.CriterionModifierIncludes,
@@ -658,8 +658,8 @@ func (me *contentDirectoryService) getPerformerScenes(paths []string, host strin
 	return me.getVideos(sceneFilter, parentID, host)
 }
 
-func (me *contentDirectoryService) getGroups() []interface{} {
-	var objs []interface{}
+func (me *contentDirectoryService) getGroups() []any {
+	var objs []any
 
 	r := me.repository
 	if err := r.WithReadTxn(context.TODO(), func(ctx context.Context) error {
@@ -680,7 +680,7 @@ func (me *contentDirectoryService) getGroups() []interface{} {
 	return objs
 }
 
-func (me *contentDirectoryService) getGroupScenes(paths []string, host string) []interface{} {
+func (me *contentDirectoryService) getGroupScenes(paths []string, host string) []any {
 	sceneFilter := &models.SceneFilterType{
 		Groups: &models.HierarchicalMultiCriterionInput{
 			Modifier: models.CriterionModifierIncludes,
@@ -698,8 +698,8 @@ func (me *contentDirectoryService) getGroupScenes(paths []string, host string) [
 	return me.getVideos(sceneFilter, parentID, host)
 }
 
-func (me *contentDirectoryService) getRating() []interface{} {
-	var objs []interface{}
+func (me *contentDirectoryService) getRating() []any {
+	var objs []any
 
 	for r := 1; r <= 5; r++ {
 		rStr := strconv.Itoa(r)
@@ -709,7 +709,7 @@ func (me *contentDirectoryService) getRating() []interface{} {
 	return objs
 }
 
-func (me *contentDirectoryService) getRatingScenes(paths []string, host string) []interface{} {
+func (me *contentDirectoryService) getRatingScenes(paths []string, host string) []any {
 	r, err := strconv.Atoi(paths[0])
 	if err != nil {
 		return nil

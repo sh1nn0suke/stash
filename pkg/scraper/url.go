@@ -258,7 +258,7 @@ func urlFromCDP(ctx context.Context, urlCDP string, driverOptions scraperDriverO
 
 		// Based on https://github.com/chromedp/examples/blob/master/proxy/main.go
 		lctx, lcancel := context.WithCancel(ctx)
-		chromedp.ListenTarget(lctx, func(ev interface{}) {
+		chromedp.ListenTarget(lctx, func(ev any) {
 			switch ev := ev.(type) {
 			case *fetch.EventRequestPaused:
 				go func() {
@@ -351,7 +351,7 @@ func getRemoteCDPWSAddress(ctx context.Context, url string) (string, error) {
 	}
 	defer resp.Body.Close()
 
-	var result map[string]interface{}
+	var result map[string]any
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return "", err
@@ -361,8 +361,8 @@ func getRemoteCDPWSAddress(ctx context.Context, url string) (string, error) {
 	return remote, err
 }
 
-func cdpHeaders(driverOptions scraperDriverOptions) map[string]interface{} {
-	headers := map[string]interface{}{}
+func cdpHeaders(driverOptions scraperDriverOptions) map[string]any {
+	headers := map[string]any{}
 	if driverOptions.Headers != nil {
 		for _, h := range driverOptions.Headers {
 			if h.Key != "" {

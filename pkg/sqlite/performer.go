@@ -550,7 +550,7 @@ func (qb *PerformerStore) FindByNames(ctx context.Context, names []string, nocas
 	}
 	clause += "IN " + getInBinding(len(names))
 
-	var args []interface{}
+	var args []any
 	for _, name := range names {
 		args = append(args, name)
 	}
@@ -698,7 +698,7 @@ var selectPerformerLastOAtSQL = utils.StrFormat(
 		"LEFT JOIN {scenes_o_dates} ON {scenes_o_dates}.{scene_id} = {scenes}.id "+
 		"WHERE s.{performer_id} = {performers}.id"+
 		")",
-	map[string]interface{}{
+	map[string]any{
 		"performer_id":      performerIDColumn,
 		"performers":        performerTable,
 		"performers_scenes": performersScenesTable,
@@ -721,7 +721,7 @@ var selectPerformerLatestSceneSQL = utils.StrFormat(
 		"LEFT JOIN {scenes} ON {scenes}.id = s.{scene_id} "+
 		"WHERE s.{performer_id} = {performers}.id"+
 		")",
-	map[string]interface{}{
+	map[string]any{
 		"performer_id":      performerIDColumn,
 		"performers":        performerTable,
 		"performers_scenes": performersScenesTable,
@@ -744,7 +744,7 @@ var selectPerformerLastPlayedAtSQL = utils.StrFormat(
 		"LEFT JOIN {scenes_view_dates} ON {scenes_view_dates}.{scene_id} = {scenes}.id "+
 		"WHERE s.{performer_id} = {performers}.id"+
 		")",
-	map[string]interface{}{
+	map[string]any{
 		"performer_id":      performerIDColumn,
 		"performers":        performerTable,
 		"performers_scenes": performersScenesTable,
@@ -767,7 +767,7 @@ var selectPerformerScenesDurationSQL = utils.StrFormat(
 		"LEFT JOIN {scenes_files} ON {scenes_files}.{scene_id} = {scenes}.id "+
 		"LEFT JOIN video_files ON video_files.file_id = {scenes_files}.file_id "+
 		"WHERE s.{performer_id} = {performers}.id",
-	map[string]interface{}{
+	map[string]any{
 		"performer_id":      performerIDColumn,
 		"performers":        performerTable,
 		"performers_scenes": performersScenesTable,
@@ -789,7 +789,7 @@ var selectPerformerScenesSizeSQL = utils.StrFormat(
 		"LEFT JOIN {scenes_files} ON {scenes_files}.{scene_id} = {scenes}.id "+
 		"LEFT JOIN {files} ON {files}.id = {scenes_files}.file_id "+
 		"WHERE s.{performer_id} = {performers}.id",
-	map[string]interface{}{
+	map[string]any{
 		"performer_id":      performerIDColumn,
 		"performers":        performerTable,
 		"performers_scenes": performersScenesTable,
@@ -960,8 +960,8 @@ func (qb *PerformerStore) Merge(ctx context.Context, source []int, destination i
 
 	inBinding := getInBinding(len(source))
 
-	args := []interface{}{destination}
-	srcArgs := make([]interface{}, len(source))
+	args := []any{destination}
+	srcArgs := make([]any, len(source))
 	for i, id := range source {
 		if id == destination {
 			return errors.New("cannot merge where source == destination")

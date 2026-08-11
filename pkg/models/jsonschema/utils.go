@@ -7,13 +7,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func CompareJSON(a interface{}, b interface{}) bool {
+func CompareJSON(a any, b any) bool {
 	aBuf, _ := encode(a)
 	bBuf, _ := encode(b)
 	return bytes.Equal(aBuf, bBuf)
 }
 
-func marshalToFile(filePath string, j interface{}) error {
+func marshalToFile(filePath string, j any) error {
 	data, err := encode(j)
 	if err != nil {
 		return err
@@ -21,7 +21,7 @@ func marshalToFile(filePath string, j interface{}) error {
 	return os.WriteFile(filePath, data, 0644)
 }
 
-func encode(j interface{}) ([]byte, error) {
+func encode(j any) ([]byte, error) {
 	buffer := &bytes.Buffer{}
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	encoder := json.NewEncoder(buffer)

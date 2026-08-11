@@ -33,7 +33,7 @@ func (s *customFieldsStore) deleteForID(ctx context.Context, id int) error {
 
 func (s *customFieldsStore) SetCustomFields(ctx context.Context, id int, values models.CustomFieldsInput) error {
 	var partial bool
-	var valMap map[string]interface{}
+	var valMap map[string]any
 
 	switch {
 	case values.Full != nil:
@@ -61,7 +61,7 @@ func (s *customFieldsStore) SetCustomFields(ctx context.Context, id int, values 
 	return nil
 }
 
-func (s *customFieldsStore) validateCustomFields(values map[string]interface{}, deleteKeys []string) error {
+func (s *customFieldsStore) validateCustomFields(values map[string]any, deleteKeys []string) error {
 	// if values is nil, nothing to validate
 	if values == nil {
 		return nil
@@ -100,7 +100,7 @@ func (s *customFieldsStore) validateCustomFieldName(fieldName string) error {
 	return nil
 }
 
-func getSQLValueFromCustomFieldInput(input interface{}) (interface{}, error) {
+func getSQLValueFromCustomFieldInput(input any) (any, error) {
 	switch v := input.(type) {
 	case json.Number:
 		if i, err := v.Int64(); err == nil {
@@ -113,7 +113,7 @@ func getSQLValueFromCustomFieldInput(input interface{}) (interface{}, error) {
 		}
 
 		return f, nil
-	case []interface{}, map[string]interface{}:
+	case []any, map[string]any:
 		// TODO - in future it would be nice to convert to a JSON string
 		// however, we would need some way to differentiate between a JSON string and a regular string
 		// for now, we will not support objects and arrays
@@ -123,12 +123,12 @@ func getSQLValueFromCustomFieldInput(input interface{}) (interface{}, error) {
 	}
 }
 
-func (s *customFieldsStore) sqlValueToValue(value interface{}) interface{} {
+func (s *customFieldsStore) sqlValueToValue(value any) any {
 	// TODO - if we ever support objects and arrays we will need to add support here
 	return value
 }
 
-func (s *customFieldsStore) setCustomFields(ctx context.Context, id int, values map[string]interface{}, partial bool) error {
+func (s *customFieldsStore) setCustomFields(ctx context.Context, id int, values map[string]any, partial bool) error {
 	if !partial {
 		// delete existing custom fields
 		if err := s.deleteForID(ctx, id); err != nil {
@@ -144,7 +144,7 @@ func (s *customFieldsStore) setCustomFields(ctx context.Context, id int, values 
 	// upsert new custom fields
 	q := dialect.Insert(s.table).Prepared(true).Cols(s.fk, "field", "value").
 		OnConflict(goqu.DoUpdate(conflictKey, goqu.Record{"value": goqu.I("excluded.value")}))
-	r := make([]interface{}, len(values))
+	r := make([]any, len(values))
 	var i int
 	for key, value := range values {
 		v, err := getSQLValueFromCustomFieldInput(value)
@@ -178,14 +178,14 @@ func (s *customFieldsStore) deleteCustomFields(ctx context.Context, id int, keys
 	return nil
 }
 
-func (s *customFieldsStore) GetCustomFields(ctx context.Context, id int) (map[string]interface{}, error) {
+func (s *customFieldsStore) GetCustomFields(ctx context.Context, id int) (map[string]any, error) {
 	q := dialect.Select("field", "value").From(s.table).Where(s.fk.Eq(id))
 
 	const single = false
-	ret := make(map[string]interface{})
+	ret := make(map[string]any)
 	err := queryFunc(ctx, q, single, func(rows *sqlx.Rows) error {
 		var field string
-		var value interface{}
+		var value any
 		if err := rows.Scan(&field, &value); err != nil {
 			return fmt.Errorf("scanning custom fields: %w", err)
 		}
@@ -206,7 +206,7 @@ func (s *customFieldsStore) GetCustomFieldsBulk(ctx context.Context, ids []int) 
 	ret := make([]models.CustomFieldMap, len(ids))
 	// initialise ret with empty maps for each id
 	for i := range ret {
-		ret[i] = make(map[string]interface{})
+		ret[i] = make(map[string]any)
 	}
 
 	idi := make(map[int]int, len(ids))
@@ -217,7 +217,7 @@ func (s *customFieldsStore) GetCustomFieldsBulk(ctx context.Context, ids []int) 
 	err := queryFunc(ctx, q, single, func(rows *sqlx.Rows) error {
 		var id int
 		var field string
-		var value interface{}
+		var value any
 		if err := rows.Scan(&id, &field, &value); err != nil {
 			return fmt.Errorf("scanning custom fields: %w", err)
 		}
@@ -225,7 +225,7 @@ func (s *customFieldsStore) GetCustomFieldsBulk(ctx context.Context, ids []int) 
 		i := idi[id]
 		m := ret[i]
 		if m == nil {
-			m = make(map[string]interface{})
+			m = make(map[string]any)
 			ret[i] = m
 		}
 
@@ -258,7 +258,7 @@ func (h *customFieldsFilterHandler) leftJoin(f *filterBuilder, as string, field 
 
 func (h *customFieldsFilterHandler) handleCriterion(f *filterBuilder, joinAs string, cc models.CustomFieldCriterionInput) {
 	// convert values
-	cv := make([]interface{}, len(cc.Value))
+	cv := make([]any, len(cc.Value))
 	for i, v := range cc.Value {
 		var err error
 		cv[i], err = getSQLValueFromCustomFieldInput(v)

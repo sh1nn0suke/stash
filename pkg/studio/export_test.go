@@ -33,8 +33,8 @@ var (
 	parentStudioName  = "parentStudio"
 	autoTagIgnored    = true
 	studioOrganized   = true
-	emptyCustomFields = make(map[string]interface{})
-	customFields      = map[string]interface{}{
+	emptyCustomFields = make(map[string]any)
+	customFields      = map[string]any{
 		"customField1": "customValue1",
 	}
 )
@@ -99,7 +99,7 @@ func createEmptyStudio(id int) models.Studio {
 	}
 }
 
-func createFullJSONStudio(parentStudio, image string, aliases []string, customFields map[string]interface{}) *jsonschema.Studio {
+func createFullJSONStudio(parentStudio, image string, aliases []string, customFields map[string]any) *jsonschema.Studio {
 	return &jsonschema.Studio{
 		Name:     studioName,
 		URLs:     []string{url},
@@ -139,7 +139,7 @@ func createEmptyJSONStudio() *jsonschema.Studio {
 
 type testScenario struct {
 	input        models.Studio
-	customFields map[string]interface{}
+	customFields map[string]any
 	expected     *jsonschema.Studio
 	err          bool
 }

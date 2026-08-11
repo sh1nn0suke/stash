@@ -92,7 +92,7 @@ func (h hierarchicalRelationshipHandler) handleValues(f *filterBuilder, c models
 		return
 	}
 
-	var args []interface{}
+	var args []any
 	for _, val := range c.Value {
 		args = append(args, val)
 	}

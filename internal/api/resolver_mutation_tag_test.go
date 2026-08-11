@@ -35,7 +35,7 @@ var testCtx = context.Background()
 
 type mockHookExecutor struct{}
 
-func (*mockHookExecutor) ExecutePostHooks(ctx context.Context, id int, hookType hook.TriggerEnum, input interface{}, inputFields []string) {
+func (*mockHookExecutor) ExecutePostHooks(ctx context.Context, id int, hookType hook.TriggerEnum, input any, inputFields []string) {
 }
 
 func TestTagCreate(t *testing.T) {

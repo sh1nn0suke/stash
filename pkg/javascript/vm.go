@@ -55,11 +55,11 @@ type APIAdder interface {
 
 type ObjectValueDef struct {
 	Name  string
-	Value interface{}
+	Value any
 }
 
 type setter interface {
-	Set(name string, value interface{}) error
+	Set(name string, value any) error
 }
 
 func Compile(path string) (*goja.Program, error) {

@@ -32,7 +32,7 @@ func (e ImportMissingRefEnum) String() string {
 	return string(e)
 }
 
-func (e *ImportMissingRefEnum) UnmarshalGQL(v interface{}) error {
+func (e *ImportMissingRefEnum) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")

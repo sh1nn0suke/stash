@@ -13,10 +13,10 @@ func TestConcurrentConfigAccess(t *testing.T) {
 	const workers = 8
 	const loops = 200
 	var wg sync.WaitGroup
-	for k := 0; k < workers; k++ {
+	for k := range workers {
 		wg.Add(1)
 		go func(wk int) {
-			for l := 0; l < loops; l++ {
+			for l := range loops {
 				start := time.Now()
 				if err := i.SetInitialConfig(); err != nil {
 					t.Errorf("Failure setting initial configuration in worker %v iteration %v: %v", wk, l, err)

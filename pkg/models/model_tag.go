@@ -32,7 +32,7 @@ func NewTag() Tag {
 type CreateTagInput struct {
 	*Tag
 
-	CustomFields map[string]interface{} `json:"custom_fields"`
+	CustomFields map[string]any `json:"custom_fields"`
 }
 
 type UpdateTagInput struct {

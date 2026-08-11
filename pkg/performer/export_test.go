@@ -54,8 +54,8 @@ var (
 	circumcisedEnum = models.CircumcisedEnumCut
 	circumcised     = circumcisedEnum.String()
 
-	emptyCustomFields = make(map[string]interface{})
-	customFields      = map[string]interface{}{
+	emptyCustomFields = make(map[string]any)
+	customFields      = map[string]any{
 		"customField1": "customValue1",
 	}
 )
@@ -188,7 +188,7 @@ func createEmptyJSONPerformer() *jsonschema.Performer {
 
 type testScenario struct {
 	input        models.Performer
-	customFields map[string]interface{}
+	customFields map[string]any
 	expected     *jsonschema.Performer
 	err          bool
 }

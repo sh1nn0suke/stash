@@ -38,7 +38,7 @@ func (e GenderEnum) String() string {
 	return string(e)
 }
 
-func (e *GenderEnum) UnmarshalGQL(v interface{}) error {
+func (e *GenderEnum) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
@@ -85,7 +85,7 @@ func (e CircumcisedEnum) String() string {
 	return string(e)
 }
 
-func (e *CircumcisedEnum) UnmarshalGQL(v interface{}) error {
+func (e *CircumcisedEnum) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
@@ -252,7 +252,7 @@ type PerformerCreateInput struct {
 	Weight        *int           `json:"weight"`
 	IgnoreAutoTag *bool          `json:"ignore_auto_tag"`
 
-	CustomFields map[string]interface{} `json:"custom_fields"`
+	CustomFields map[string]any `json:"custom_fields"`
 }
 
 type PerformerUpdateInput struct {

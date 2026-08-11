@@ -30,7 +30,7 @@ var (
 	organized  = true
 	ocounter   = 2
 
-	customFields = map[string]interface{}{
+	customFields = map[string]any{
 		"customField1": "customValue1",
 	}
 )
@@ -64,7 +64,7 @@ func createFullImage(id int) models.Image {
 	}
 }
 
-func createFullJSONImage(customFields map[string]interface{}) *jsonschema.Image {
+func createFullJSONImage(customFields map[string]any) *jsonschema.Image {
 	return &jsonschema.Image{
 		Title:     title,
 		OCounter:  ocounter,
@@ -85,7 +85,7 @@ func createFullJSONImage(customFields map[string]interface{}) *jsonschema.Image 
 
 type basicTestScenario struct {
 	input        models.Image
-	customFields map[string]interface{}
+	customFields map[string]any
 	expected     *jsonschema.Image
 }
 

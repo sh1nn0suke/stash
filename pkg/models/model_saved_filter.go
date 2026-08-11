@@ -44,7 +44,7 @@ func (e FilterMode) String() string {
 	return string(e)
 }
 
-func (e *FilterMode) UnmarshalGQL(v interface{}) error {
+func (e *FilterMode) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
@@ -62,10 +62,10 @@ func (e FilterMode) MarshalGQL(w io.Writer) {
 }
 
 type SavedFilter struct {
-	ID           int                    `db:"id" json:"id"`
-	Mode         FilterMode             `db:"mode" json:"mode"`
-	Name         string                 `db:"name" json:"name"`
-	FindFilter   *FindFilterType        `json:"find_filter"`
-	ObjectFilter map[string]interface{} `json:"object_filter"`
-	UIOptions    map[string]interface{} `json:"ui_options"`
+	ID           int             `db:"id" json:"id"`
+	Mode         FilterMode      `db:"mode" json:"mode"`
+	Name         string          `db:"name" json:"name"`
+	FindFilter   *FindFilterType `json:"find_filter"`
+	ObjectFilter map[string]any  `json:"object_filter"`
+	UIOptions    map[string]any  `json:"ui_options"`
 }

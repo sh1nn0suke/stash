@@ -35,8 +35,8 @@ var (
 	createTime     = time.Date(2001, 01, 01, 0, 0, 0, 0, time.UTC)
 	updateTime     = time.Date(2002, 01, 01, 0, 0, 0, 0, time.UTC)
 
-	emptyCustomFields = make(map[string]interface{})
-	customFields      = map[string]interface{}{
+	emptyCustomFields = make(map[string]any)
+	customFields      = map[string]any{
 		"customField1": "customValue1",
 	}
 )
@@ -82,7 +82,7 @@ func createJSONTag(aliases []string, image string, parents []string, withCustomF
 
 type testScenario struct {
 	tag          models.Tag
-	customFields map[string]interface{}
+	customFields map[string]any
 	expected     *jsonschema.Tag
 	err          bool
 }

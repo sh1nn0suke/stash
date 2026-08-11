@@ -95,7 +95,7 @@ func (i *Importer) fileJSONToFile(ctx context.Context, fileJSON jsonschema.DirEn
 	return nil, errors.New("unknown file type")
 }
 
-func unmarshalFingerprintValue(fp gojson.RawMessage) (interface{}, error) {
+func unmarshalFingerprintValue(fp gojson.RawMessage) (any, error) {
 	// try to unmarshal as string first
 	var str string
 	if err := gojson.Unmarshal(fp, &str); err == nil {

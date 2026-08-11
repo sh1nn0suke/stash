@@ -22,10 +22,10 @@ type Log struct {
 
 func (l *Log) argToString(call goja.FunctionCall) string {
 	arg := call.Argument(0)
-	var o map[string]interface{}
-	if arg.ExportType() == reflect.TypeOf(o) {
+	var o map[string]any
+	if arg.ExportType() == reflect.TypeFor[map[string]any]() {
 		ii := arg.Export()
-		o = ii.(map[string]interface{})
+		o = ii.(map[string]any)
 		data, err := json.Marshal(o)
 		if err != nil {
 			logger.Warnf("Couldn't json encode object")

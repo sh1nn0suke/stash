@@ -57,8 +57,8 @@ type Performer struct {
 	Favorite      bool               `json:"favorite,omitempty"`
 	Tags          []string           `json:"tags,omitempty"`
 	Image         string             `json:"image,omitempty"`
-	CreatedAt     json.JSONTime      `json:"created_at,omitempty"`
-	UpdatedAt     json.JSONTime      `json:"updated_at,omitempty"`
+	CreatedAt     json.JSONTime      `json:"created_at"`
+	UpdatedAt     json.JSONTime      `json:"updated_at"`
 	Rating        int                `json:"rating,omitempty"`
 	Details       string             `json:"details,omitempty"`
 	DeathDate     string             `json:"death_date,omitempty"`
@@ -67,7 +67,7 @@ type Performer struct {
 	StashIDs      []models.StashID   `json:"stash_ids,omitempty"`
 	IgnoreAutoTag bool               `json:"ignore_auto_tag,omitempty"`
 
-	CustomFields map[string]interface{} `json:"custom_fields,omitempty"`
+	CustomFields map[string]any `json:"custom_fields,omitempty"`
 
 	// deprecated - for import only
 	URL       string `json:"url,omitempty"`

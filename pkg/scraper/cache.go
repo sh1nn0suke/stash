@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"sort"
 	"strings"
 	"time"
@@ -202,12 +203,9 @@ func (c *Cache) ReloadScrapers() {
 func (c Cache) ListScrapers(tys []ScrapeContentType) []*Scraper {
 	var ret []*Scraper
 	for _, s := range c.scrapers {
-		for _, t := range tys {
-			if s.supports(t) {
-				spec := s.spec()
-				ret = append(ret, &spec)
-				break
-			}
+		if slices.ContainsFunc(tys, s.supports) {
+			spec := s.spec()
+			ret = append(ret, &spec)
 		}
 	}
 

@@ -12,30 +12,30 @@ import (
 // Tracef, Debugf, Infof, Warnf, Errorf log to the applicable log level. Arguments are handled in the manner of fmt.Printf.
 // Fatal and Fatalf log to the applicable log level, then call os.Exit(1).
 type LoggerImpl interface {
-	Progressf(format string, args ...interface{})
+	Progressf(format string, args ...any)
 
-	Trace(args ...interface{})
-	Tracef(format string, args ...interface{})
-	TraceFunc(fn func() (string, []interface{}))
+	Trace(args ...any)
+	Tracef(format string, args ...any)
+	TraceFunc(fn func() (string, []any))
 
-	Debug(args ...interface{})
-	Debugf(format string, args ...interface{})
-	DebugFunc(fn func() (string, []interface{}))
+	Debug(args ...any)
+	Debugf(format string, args ...any)
+	DebugFunc(fn func() (string, []any))
 
-	Info(args ...interface{})
-	Infof(format string, args ...interface{})
-	InfoFunc(fn func() (string, []interface{}))
+	Info(args ...any)
+	Infof(format string, args ...any)
+	InfoFunc(fn func() (string, []any))
 
-	Warn(args ...interface{})
-	Warnf(format string, args ...interface{})
-	WarnFunc(fn func() (string, []interface{}))
+	Warn(args ...any)
+	Warnf(format string, args ...any)
+	WarnFunc(fn func() (string, []any))
 
-	Error(args ...interface{})
-	Errorf(format string, args ...interface{})
-	ErrorFunc(fn func() (string, []interface{}))
+	Error(args ...any)
+	Errorf(format string, args ...any)
+	ErrorFunc(fn func() (string, []any))
 
-	Fatal(args ...interface{})
-	Fatalf(format string, args ...interface{})
+	Fatal(args ...any)
+	Fatalf(format string, args ...any)
 }
 
 // Logger is the LoggerImpl used when calling the global Logger functions.
@@ -44,7 +44,7 @@ var Logger LoggerImpl
 
 // Progressf calls Progressf with the Logger registered using RegisterLogger.
 // If no logger has been registered, then this function is a no-op.
-func Progressf(format string, args ...interface{}) {
+func Progressf(format string, args ...any) {
 	if Logger != nil {
 		Logger.Progressf(format, args...)
 	}
@@ -52,7 +52,7 @@ func Progressf(format string, args ...interface{}) {
 
 // Trace calls Trace with the Logger registered using RegisterLogger.
 // If no logger has been registered, then this function is a no-op.
-func Trace(args ...interface{}) {
+func Trace(args ...any) {
 	if Logger != nil {
 		Logger.Trace(args...)
 	}
@@ -60,7 +60,7 @@ func Trace(args ...interface{}) {
 
 // Tracef calls Tracef with the Logger registered using RegisterLogger.
 // If no logger has been registered, then this function is a no-op.
-func Tracef(format string, args ...interface{}) {
+func Tracef(format string, args ...any) {
 	if Logger != nil {
 		Logger.Tracef(format, args...)
 	}
@@ -68,7 +68,7 @@ func Tracef(format string, args ...interface{}) {
 
 // TraceFunc calls TraceFunc with the Logger registered using RegisterLogger.
 // If no logger has been registered, then this function is a no-op.
-func TraceFunc(fn func() (string, []interface{})) {
+func TraceFunc(fn func() (string, []any)) {
 	if Logger != nil {
 		Logger.TraceFunc(fn)
 	}
@@ -76,7 +76,7 @@ func TraceFunc(fn func() (string, []interface{})) {
 
 // Debug calls Debug with the Logger registered using RegisterLogger.
 // If no logger has been registered, then this function is a no-op.
-func Debug(args ...interface{}) {
+func Debug(args ...any) {
 	if Logger != nil {
 		Logger.Debug(args...)
 	}
@@ -84,7 +84,7 @@ func Debug(args ...interface{}) {
 
 // Debugf calls Debugf with the Logger registered using RegisterLogger.
 // If no logger has been registered, then this function is a no-op.
-func Debugf(format string, args ...interface{}) {
+func Debugf(format string, args ...any) {
 	if Logger != nil {
 		Logger.Debugf(format, args...)
 	}
@@ -92,7 +92,7 @@ func Debugf(format string, args ...interface{}) {
 
 // DebugFunc calls DebugFunc with the Logger registered using RegisterLogger.
 // If no logger has been registered, then this function is a no-op.
-func DebugFunc(fn func() (string, []interface{})) {
+func DebugFunc(fn func() (string, []any)) {
 	if Logger != nil {
 		Logger.DebugFunc(fn)
 	}
@@ -100,7 +100,7 @@ func DebugFunc(fn func() (string, []interface{})) {
 
 // Info calls Info with the Logger registered using RegisterLogger.
 // If no logger has been registered, then this function is a no-op.
-func Info(args ...interface{}) {
+func Info(args ...any) {
 	if Logger != nil {
 		Logger.Info(args...)
 	}
@@ -108,7 +108,7 @@ func Info(args ...interface{}) {
 
 // Infof calls Infof with the Logger registered using RegisterLogger.
 // If no logger has been registered, then this function is a no-op.
-func Infof(format string, args ...interface{}) {
+func Infof(format string, args ...any) {
 	if Logger != nil {
 		Logger.Infof(format, args...)
 	}
@@ -116,7 +116,7 @@ func Infof(format string, args ...interface{}) {
 
 // InfoFunc calls InfoFunc with the Logger registered using RegisterLogger.
 // If no logger has been registered, then this function is a no-op.
-func InfoFunc(fn func() (string, []interface{})) {
+func InfoFunc(fn func() (string, []any)) {
 	if Logger != nil {
 		Logger.InfoFunc(fn)
 	}
@@ -124,7 +124,7 @@ func InfoFunc(fn func() (string, []interface{})) {
 
 // Warn calls Warn with the Logger registered using RegisterLogger.
 // If no logger has been registered, then this function is a no-op.
-func Warn(args ...interface{}) {
+func Warn(args ...any) {
 	if Logger != nil {
 		Logger.Warn(args...)
 	}
@@ -132,7 +132,7 @@ func Warn(args ...interface{}) {
 
 // Warnf calls Warnf with the Logger registered using RegisterLogger.
 // If no logger has been registered, then this function is a no-op.
-func Warnf(format string, args ...interface{}) {
+func Warnf(format string, args ...any) {
 	if Logger != nil {
 		Logger.Warnf(format, args...)
 	}
@@ -140,7 +140,7 @@ func Warnf(format string, args ...interface{}) {
 
 // WarnFunc calls WarnFunc with the Logger registered using RegisterLogger.
 // If no logger has been registered, then this function is a no-op.
-func WarnFunc(fn func() (string, []interface{})) {
+func WarnFunc(fn func() (string, []any)) {
 	if Logger != nil {
 		Logger.WarnFunc(fn)
 	}
@@ -148,7 +148,7 @@ func WarnFunc(fn func() (string, []interface{})) {
 
 // Error calls Error with the Logger registered using RegisterLogger.
 // If no logger has been registered, then this function is a no-op.
-func Error(args ...interface{}) {
+func Error(args ...any) {
 	if Logger != nil {
 		Logger.Error(args...)
 	}
@@ -156,7 +156,7 @@ func Error(args ...interface{}) {
 
 // Errorf calls Errorf with the Logger registered using RegisterLogger.
 // If no logger has been registered, then this function is a no-op.
-func Errorf(format string, args ...interface{}) {
+func Errorf(format string, args ...any) {
 	if Logger != nil {
 		Logger.Errorf(format, args...)
 	}
@@ -164,7 +164,7 @@ func Errorf(format string, args ...interface{}) {
 
 // ErrorFunc calls ErrorFunc with the Logger registered using RegisterLogger.
 // If no logger has been registered, then this function is a no-op.
-func ErrorFunc(fn func() (string, []interface{})) {
+func ErrorFunc(fn func() (string, []any)) {
 	if Logger != nil {
 		Logger.ErrorFunc(fn)
 	}
@@ -172,7 +172,7 @@ func ErrorFunc(fn func() (string, []interface{})) {
 
 // Fatal calls Fatal with the Logger registered using RegisterLogger.
 // If no logger has been registered, then this function is a no-op.
-func Fatal(args ...interface{}) {
+func Fatal(args ...any) {
 	if Logger != nil {
 		Logger.Fatal(args...)
 	} else {
@@ -182,7 +182,7 @@ func Fatal(args ...interface{}) {
 
 // Fatalf calls Fatalf with the Logger registered using RegisterLogger.
 // If no logger has been registered, then this function is a no-op.
-func Fatalf(format string, args ...interface{}) {
+func Fatalf(format string, args ...any) {
 	if Logger != nil {
 		Logger.Fatalf(format, args...)
 	} else {

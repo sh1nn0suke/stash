@@ -27,7 +27,7 @@ type StashServerConnection struct {
 }
 
 // PluginArgValue represents a single value parameter for plugin operations.
-type PluginArgValue interface{}
+type PluginArgValue any
 
 // ArgsMap is a map of argument key to value.
 type ArgsMap map[string]PluginArgValue
@@ -77,8 +77,8 @@ func (m ArgsMap) Float(key string) float64 {
 	return ret
 }
 
-func (m ArgsMap) ToMap() map[string]interface{} {
-	ret := make(map[string]interface{})
+func (m ArgsMap) ToMap() map[string]any {
+	ret := make(map[string]any)
 	for k, v := range m {
 		ret[k] = v
 	}
@@ -99,8 +99,8 @@ type PluginInput struct {
 // processes when execution has concluded. It is expected that this data will
 // be encoded as JSON.
 type PluginOutput struct {
-	Error  *string     `json:"error"`
-	Output interface{} `json:"output"`
+	Error  *string `json:"error"`
+	Output any     `json:"output"`
 }
 
 // SetError is a convenience method that sets the Error field based on the
@@ -113,8 +113,8 @@ func (o *PluginOutput) SetError(err error) {
 // HookContext is passed as a PluginArgValue and indicates what hook triggered
 // this plugin task.
 type HookContext struct {
-	ID          int         `json:"id,omitempty"`
-	Type        string      `json:"type"`
-	Input       interface{} `json:"input"`
-	InputFields []string    `json:"inputFields,omitempty"`
+	ID          int      `json:"id,omitempty"`
+	Type        string   `json:"type"`
+	Input       any      `json:"input"`
+	InputFields []string `json:"inputFields,omitempty"`
 }

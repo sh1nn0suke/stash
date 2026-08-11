@@ -104,7 +104,7 @@ func (qb *folderFilterHandler) zipFileCriterionHandler(criterion *models.MultiCr
 				return
 			}
 
-			var args []interface{}
+			var args []any
 			for _, tagID := range criterion.Value {
 				args = append(args, tagID)
 			}

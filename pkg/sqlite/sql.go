@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -62,20 +63,16 @@ func (o sortOptions) validateSort(sort string) error {
 		return nil
 	}
 
-	for _, v := range o {
-		if v == sort {
-			return nil
-		}
+	if slices.Contains(o, sort) {
+		return nil
 	}
 
 	return fmt.Errorf("invalid sort: %s", sort)
 }
 
 func validateIsMissing(isMissing string, allowed []string) error {
-	for _, v := range allowed {
-		if v == isMissing {
-			return nil
-		}
+	if slices.Contains(allowed, isMissing) {
+		return nil
 	}
 
 	return fmt.Errorf("invalid is_missing field: %s", isMissing)
@@ -152,7 +149,7 @@ func getCountSort(primaryTable, joinTable, primaryFK, direction string) string {
 // It is used for includes and excludes string criteria.
 func getStringSearchClause(columns []string, q string, not bool) sqlClause {
 	var likeClauses []string
-	var args []interface{}
+	var args []any
 
 	notStr := ""
 	binaryType := " OR "
@@ -165,9 +162,9 @@ func getStringSearchClause(columns []string, q string, not bool) sqlClause {
 
 	if trimmedQuery == q {
 		q = regexp.MustCompile(`\s+`).ReplaceAllString(q, " ")
-		queryWords := strings.Split(q, " ")
+		queryWords := strings.SplitSeq(q, " ")
 		// Search for any word
-		for _, word := range queryWords {
+		for word := range queryWords {
 			for _, column := range columns {
 				likeClauses = append(likeClauses, column+notStr+" LIKE ?")
 				args = append(args, "%"+word+"%")
@@ -186,7 +183,7 @@ func getStringSearchClause(columns []string, q string, not bool) sqlClause {
 }
 
 func getEnumSearchClause(column string, enumVals []string, not bool) sqlClause {
-	var args []interface{}
+	var args []any
 
 	notStr := ""
 	if not {
@@ -207,35 +204,35 @@ func getInBinding(length int) string {
 	return "(" + bindings + ")"
 }
 
-func getIntCriterionWhereClause(column string, input models.IntCriterionInput) (string, []interface{}) {
+func getIntCriterionWhereClause(column string, input models.IntCriterionInput) (string, []any) {
 	return getIntWhereClause(column, input.Modifier, input.Value, input.Value2)
 }
 
-func getIntWhereClause(column string, modifier models.CriterionModifier, value int, upper *int) (string, []interface{}) {
+func getIntWhereClause(column string, modifier models.CriterionModifier, value int, upper *int) (string, []any) {
 	if upper == nil {
 		u := 0
 		upper = &u
 	}
 
-	args := []interface{}{value, *upper}
+	args := []any{value, *upper}
 	return getNumericWhereClause(column, modifier, args)
 }
 
-func getFloatCriterionWhereClause(column string, input models.FloatCriterionInput) (string, []interface{}) {
+func getFloatCriterionWhereClause(column string, input models.FloatCriterionInput) (string, []any) {
 	return getFloatWhereClause(column, input.Modifier, input.Value, input.Value2)
 }
 
-func getFloatWhereClause(column string, modifier models.CriterionModifier, value float64, upper *float64) (string, []interface{}) {
+func getFloatWhereClause(column string, modifier models.CriterionModifier, value float64, upper *float64) (string, []any) {
 	if upper == nil {
 		u := 0.0
 		upper = &u
 	}
 
-	args := []interface{}{value, *upper}
+	args := []any{value, *upper}
 	return getNumericWhereClause(column, modifier, args)
 }
 
-func getNumericWhereClause(column string, modifier models.CriterionModifier, args []interface{}) (string, []interface{}) {
+func getNumericWhereClause(column string, modifier models.CriterionModifier, args []any) (string, []any) {
 	singleArgs := args[0:1]
 
 	switch modifier {
@@ -260,11 +257,11 @@ func getNumericWhereClause(column string, modifier models.CriterionModifier, arg
 	panic("unsupported numeric modifier type " + modifier)
 }
 
-func getDateCriterionWhereClause(column string, input models.DateCriterionInput) (string, []interface{}) {
+func getDateCriterionWhereClause(column string, input models.DateCriterionInput) (string, []any) {
 	return getDateWhereClause(column, input.Modifier, input.Value, input.Value2)
 }
 
-func getDateWhereClause(column string, modifier models.CriterionModifier, value string, upper *string) (string, []interface{}) {
+func getDateWhereClause(column string, modifier models.CriterionModifier, value string, upper *string) (string, []any) {
 	if upper == nil {
 		u := time.Now().AddDate(0, 0, 1).Format(time.RFC3339)
 		upper = &u
@@ -273,8 +270,8 @@ func getDateWhereClause(column string, modifier models.CriterionModifier, value 
 	valueDate, _ := models.ParseDate(value)
 	date := Date{Date: valueDate.Time}
 
-	args := []interface{}{date}
-	betweenArgs := []interface{}{date, *upper}
+	args := []any{date}
+	betweenArgs := []any{date, *upper}
 
 	switch modifier {
 	case models.CriterionModifierIsNull:
@@ -298,18 +295,18 @@ func getDateWhereClause(column string, modifier models.CriterionModifier, value 
 	panic("unsupported date modifier type")
 }
 
-func getTimestampCriterionWhereClause(column string, input models.TimestampCriterionInput) (string, []interface{}) {
+func getTimestampCriterionWhereClause(column string, input models.TimestampCriterionInput) (string, []any) {
 	return getTimestampWhereClause(column, input.Modifier, input.Value, input.Value2)
 }
 
-func getTimestampWhereClause(column string, modifier models.CriterionModifier, value string, upper *string) (string, []interface{}) {
+func getTimestampWhereClause(column string, modifier models.CriterionModifier, value string, upper *string) (string, []any) {
 	if upper == nil {
 		u := time.Now().AddDate(0, 0, 1).Format(time.RFC3339)
 		upper = &u
 	}
 
-	args := []interface{}{value}
-	betweenArgs := []interface{}{value, *upper}
+	args := []any{value}
+	betweenArgs := []any{value, *upper}
 
 	switch modifier {
 	case models.CriterionModifierIsNull:
@@ -366,7 +363,7 @@ func getMultiCriterionClause(primaryTable, foreignTable, joinTable, primaryFK, f
 	return whereClause, havingClause
 }
 
-func getCountCriterionClause(primaryTable, joinTable, primaryFK string, criterion models.IntCriterionInput) (string, []interface{}) {
+func getCountCriterionClause(primaryTable, joinTable, primaryFK string, criterion models.IntCriterionInput) (string, []any) {
 	lhs := fmt.Sprintf("(SELECT COUNT(*) FROM %s s WHERE s.%s = %s.id)", joinTable, primaryFK, primaryTable)
 	return getIntCriterionWhereClause(lhs, criterion)
 }

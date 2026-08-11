@@ -7,7 +7,7 @@ import (
 	"runtime"
 )
 
-//go:embed v2.5/build
+//go:embed v2.6/build
 var uiBox embed.FS
 var UIBox fs.FS
 

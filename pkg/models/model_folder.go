@@ -16,7 +16,7 @@ func (i FolderID) String() string {
 	return strconv.Itoa(int(i))
 }
 
-func (i *FolderID) UnmarshalGQL(v interface{}) (err error) {
+func (i *FolderID) UnmarshalGQL(v any) (err error) {
 	switch v := v.(type) {
 	case string:
 		var id int

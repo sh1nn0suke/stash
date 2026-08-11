@@ -11,11 +11,12 @@ import (
 	"strings"
 
 	"github.com/pkg/browser"
+	"golang.org/x/term"
+
 	"github.com/stashapp/stash/internal/build"
 	"github.com/stashapp/stash/internal/manager/config"
 	"github.com/stashapp/stash/pkg/fsutil"
 	"github.com/stashapp/stash/pkg/logger"
-	"golang.org/x/term"
 )
 
 var isDesktop bool

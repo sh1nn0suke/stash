@@ -199,7 +199,7 @@ func TestAddWhere(t *testing.T) {
 	assert.Len(f.whereClauses, 0)
 
 	const whereClause = "a = b"
-	var args = []interface{}{"1", "2"}
+	var args = []any{"1", "2"}
 
 	// ensure addWhere sets where clause and args
 	f.addWhere(whereClause, args...)
@@ -224,7 +224,7 @@ func TestAddHaving(t *testing.T) {
 	assert.Len(f.havingClauses, 0)
 
 	const havingClause = "a = b"
-	var args = []interface{}{"1", "2"}
+	var args = []any{"1", "2"}
 
 	// ensure addWhere sets where clause and args
 	f.addHaving(havingClause, args...)

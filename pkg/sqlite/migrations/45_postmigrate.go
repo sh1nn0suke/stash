@@ -172,7 +172,7 @@ func (m *schema45Migrator) migrateImagesTable(ctx context.Context, options migra
 
 				var id int
 
-				result := make([]interface{}, len(options.cols)+1)
+				result := make([]any, len(options.cols)+1)
 				result[0] = &id
 				for i := range options.cols {
 					v := []byte{}

@@ -76,7 +76,7 @@ func (e PreviewPreset) String() string {
 	return string(e)
 }
 
-func (e *PreviewPreset) UnmarshalGQL(v interface{}) error {
+func (e *PreviewPreset) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")

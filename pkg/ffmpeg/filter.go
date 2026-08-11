@@ -39,10 +39,7 @@ func (f VideoFilter) ScaleMaxSize(maxDimensions int) VideoFilter {
 // ScaleMax returns a VideoFilter scaling to maxSize. It will scale width if it is larger than height, otherwise it will scale height.
 func (f VideoFilter) ScaleMax(inputWidth, inputHeight, maxSize int) VideoFilter {
 	// get the smaller dimension of the input
-	videoSize := inputHeight
-	if inputWidth < videoSize {
-		videoSize = inputWidth
-	}
+	videoSize := min(inputWidth, inputHeight)
 
 	// if maxSize is larger than the video dimension, then no-op
 	if maxSize >= videoSize || maxSize == 0 {

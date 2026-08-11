@@ -293,14 +293,14 @@ func (r *performerResolver) Groups(ctx context.Context, obj *models.Performer) (
 	return ret, nil
 }
 
-func (r *performerResolver) CustomFields(ctx context.Context, obj *models.Performer) (map[string]interface{}, error) {
+func (r *performerResolver) CustomFields(ctx context.Context, obj *models.Performer) (map[string]any, error) {
 	m, err := loaders.From(ctx).PerformerCustomFields.Load(obj.ID)
 	if err != nil {
 		return nil, err
 	}
 
 	if m == nil {
-		return make(map[string]interface{}), nil
+		return make(map[string]any), nil
 	}
 
 	return m, nil

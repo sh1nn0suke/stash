@@ -352,7 +352,7 @@ func (qb *TagStore) Destroy(ctx context.Context, id int) error {
 
 	// cannot unset primary_tag_id in scene_markers because it is not nullable
 	countQuery := "SELECT COUNT(*) as count FROM scene_markers where primary_tag_id = ?"
-	args := []interface{}{id}
+	args := []any{id}
 	primaryMarkers, err := tagRepository.runCountQuery(ctx, countQuery, args)
 	if err != nil {
 		return err
@@ -470,7 +470,7 @@ func (qb *TagStore) FindBySceneID(ctx context.Context, sceneID int) ([]*models.T
 		GROUP BY tags.id
 	`
 	query += qb.getDefaultTagSort()
-	args := []interface{}{sceneID}
+	args := []any{sceneID}
 	return qb.queryTags(ctx, query, args)
 }
 
@@ -482,7 +482,7 @@ func (qb *TagStore) FindByPerformerID(ctx context.Context, performerID int) ([]*
 		GROUP BY tags.id
 	`
 	query += qb.getDefaultTagSort()
-	args := []interface{}{performerID}
+	args := []any{performerID}
 	return qb.queryTags(ctx, query, args)
 }
 
@@ -494,7 +494,7 @@ func (qb *TagStore) FindByImageID(ctx context.Context, imageID int) ([]*models.T
 		GROUP BY tags.id
 	`
 	query += qb.getDefaultTagSort()
-	args := []interface{}{imageID}
+	args := []any{imageID}
 	return qb.queryTags(ctx, query, args)
 }
 
@@ -506,7 +506,7 @@ func (qb *TagStore) FindByGalleryID(ctx context.Context, galleryID int) ([]*mode
 		GROUP BY tags.id
 	`
 	query += qb.getDefaultTagSort()
-	args := []interface{}{galleryID}
+	args := []any{galleryID}
 	return qb.queryTags(ctx, query, args)
 }
 
@@ -518,7 +518,7 @@ func (qb *TagStore) FindByGroupID(ctx context.Context, groupID int) ([]*models.T
 		GROUP BY tags.id
 	`
 	query += qb.getDefaultTagSort()
-	args := []interface{}{groupID}
+	args := []any{groupID}
 	return qb.queryTags(ctx, query, args)
 }
 
@@ -530,7 +530,7 @@ func (qb *TagStore) FindBySceneMarkerID(ctx context.Context, sceneMarkerID int) 
 		GROUP BY tags.id
 	`
 	query += qb.getDefaultTagSort()
-	args := []interface{}{sceneMarkerID}
+	args := []any{sceneMarkerID}
 	return qb.queryTags(ctx, query, args)
 }
 
@@ -542,7 +542,7 @@ func (qb *TagStore) FindByStudioID(ctx context.Context, studioID int) ([]*models
 		GROUP BY tags.id
 	`
 	query += qb.getDefaultTagSort()
-	args := []interface{}{studioID}
+	args := []any{studioID}
 	return qb.queryTags(ctx, query, args)
 }
 
@@ -577,7 +577,7 @@ func (qb *TagStore) FindByNames(ctx context.Context, names []string, nocase bool
 		where += " COLLATE NOCASE"
 	}
 	where += " IN " + getInBinding(len(names))
-	var args []interface{}
+	var args []any
 	for _, name := range names {
 		args = append(args, name)
 	}
@@ -675,7 +675,7 @@ func (qb *TagStore) FindByParentTagID(ctx context.Context, parentID int) ([]*mod
 		WHERE tags_relations.parent_id = ?
 	`
 	query += qb.getDefaultTagSort()
-	args := []interface{}{parentID}
+	args := []any{parentID}
 	return qb.queryTags(ctx, query, args)
 }
 
@@ -686,7 +686,7 @@ func (qb *TagStore) FindByChildTagID(ctx context.Context, parentID int) ([]*mode
 		WHERE tags_relations.child_id = ?
 	`
 	query += qb.getDefaultTagSort()
-	args := []interface{}{parentID}
+	args := []any{parentID}
 	return qb.queryTags(ctx, query, args)
 }
 
@@ -725,7 +725,7 @@ func (qb *TagStore) QueryForAutoTag(ctx context.Context, words []string) ([]*mod
 	query += " LEFT JOIN tag_aliases ON tag_aliases.tag_id = tags.id"
 
 	var whereClauses []string
-	var args []interface{}
+	var args []any
 
 	for _, w := range words {
 		ww := w + "%"
@@ -880,7 +880,7 @@ func (qb *TagStore) getTagSort(query *queryBuilder, findFilter *models.FindFilte
 	return sortQuery, nil
 }
 
-func (qb *TagStore) queryTags(ctx context.Context, query string, args []interface{}) ([]*models.Tag, error) {
+func (qb *TagStore) queryTags(ctx context.Context, query string, args []any) ([]*models.Tag, error) {
 	const single = false
 	var ret []*models.Tag
 	if err := tagRepository.queryFunc(ctx, query, args, single, func(r *sqlx.Rows) error {
@@ -900,7 +900,7 @@ func (qb *TagStore) queryTags(ctx context.Context, query string, args []interfac
 	return ret, nil
 }
 
-func (qb *TagStore) queryTagPaths(ctx context.Context, query string, args []interface{}) ([]*models.TagPath, error) {
+func (qb *TagStore) queryTagPaths(ctx context.Context, query string, args []any) ([]*models.TagPath, error) {
 	const single = false
 	var ret []*models.TagPath
 	if err := tagRepository.queryFunc(ctx, query, args, single, func(r *sqlx.Rows) error {
@@ -959,8 +959,8 @@ func (qb *TagStore) Merge(ctx context.Context, source []int, destination int) er
 
 	inBinding := getInBinding(len(source))
 
-	args := []interface{}{destination}
-	srcArgs := make([]interface{}, len(source))
+	args := []any{destination}
+	srcArgs := make([]any, len(source))
 	for i, id := range source {
 		if id == destination {
 			return errors.New("cannot merge where source == destination")
@@ -1044,7 +1044,7 @@ func (qb *TagStore) UpdateParentTags(ctx context.Context, tagID int, parentIDs [
 	}
 
 	if len(parentIDs) > 0 {
-		var args []interface{}
+		var args []any
 		var values []string
 		for _, parentID := range parentIDs {
 			values = append(values, "(? , ?)")
@@ -1066,7 +1066,7 @@ func (qb *TagStore) UpdateChildTags(ctx context.Context, tagID int, childIDs []i
 	}
 
 	if len(childIDs) > 0 {
-		var args []interface{}
+		var args []any
 		var values []string
 		for _, childID := range childIDs {
 			values = append(values, "(? , ?)")
@@ -1096,11 +1096,11 @@ parents AS (
 SELECT t.*, p.path FROM tags t INNER JOIN parents p ON t.id = p.parent_id
 `
 
-	excludeArgs := []interface{}{tagID}
+	excludeArgs := []any{tagID}
 	for _, excludeID := range excludeIDs {
 		excludeArgs = append(excludeArgs, excludeID)
 	}
-	args := []interface{}{tagID}
+	args := []any{tagID}
 	args = append(args, append(append(excludeArgs, excludeArgs...), excludeArgs...)...)
 
 	return qb.queryTagPaths(ctx, query, args)
@@ -1120,11 +1120,11 @@ children AS (
 SELECT t.*, c.path FROM tags t INNER JOIN children c ON t.id = c.child_id
 `
 
-	excludeArgs := []interface{}{tagID}
+	excludeArgs := []any{tagID}
 	for _, excludeID := range excludeIDs {
 		excludeArgs = append(excludeArgs, excludeID)
 	}
-	args := []interface{}{tagID}
+	args := []any{tagID}
 	args = append(args, append(append(excludeArgs, excludeArgs...), excludeArgs...)...)
 
 	return qb.queryTagPaths(ctx, query, args)

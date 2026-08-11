@@ -30,10 +30,10 @@ type Group struct {
 	Studio     string                `json:"studio,omitempty"`
 	Tags       []string              `json:"tags,omitempty"`
 	SubGroups  []SubGroupDescription `json:"sub_groups,omitempty"`
-	CreatedAt  json.JSONTime         `json:"created_at,omitempty"`
-	UpdatedAt  json.JSONTime         `json:"updated_at,omitempty"`
+	CreatedAt  json.JSONTime         `json:"created_at"`
+	UpdatedAt  json.JSONTime         `json:"updated_at"`
 
-	CustomFields map[string]interface{} `json:"custom_fields,omitempty"`
+	CustomFields map[string]any `json:"custom_fields,omitempty"`
 
 	// deprecated - for import only
 	URL string `json:"url,omitempty"`

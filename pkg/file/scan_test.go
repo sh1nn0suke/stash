@@ -49,7 +49,7 @@ func (i scanTestFileInfo) Size() int64        { return i.size }
 func (i scanTestFileInfo) Mode() fs.FileMode  { return 0644 }
 func (i scanTestFileInfo) ModTime() time.Time { return i.modTime }
 func (i scanTestFileInfo) IsDir() bool        { return false }
-func (i scanTestFileInfo) Sys() interface{}   { return nil }
+func (i scanTestFileInfo) Sys() any           { return nil }
 
 type scanTestFingerprintCalculator struct {
 	fingerprints []models.Fingerprint

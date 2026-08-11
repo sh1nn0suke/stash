@@ -130,7 +130,7 @@ func (qb *fileFilterHandler) zipFileCriterionHandler(criterion *models.MultiCrit
 				return
 			}
 
-			var args []interface{}
+			var args []any
 			for _, tagID := range criterion.Value {
 				args = append(args, tagID)
 			}

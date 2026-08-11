@@ -50,7 +50,7 @@ func manifestToPackage(p pkg.Manifest) *Package {
 
 	ret.Metadata = p.Metadata
 	if ret.Metadata == nil {
-		ret.Metadata = make(map[string]interface{})
+		ret.Metadata = make(map[string]any)
 	}
 
 	return ret
@@ -71,7 +71,7 @@ func remotePackageToPackage(p pkg.RemotePackage, index pkg.RemotePackageIndex) *
 
 	ret.Metadata = p.Metadata
 	if ret.Metadata == nil {
-		ret.Metadata = make(map[string]interface{})
+		ret.Metadata = make(map[string]any)
 	}
 
 	ret.SourceURL = p.Repository.Path()

@@ -33,7 +33,7 @@ type Importer struct {
 
 	ID           int
 	image        models.Image
-	customFields map[string]interface{}
+	customFields map[string]any
 }
 
 func (i *Importer) PreImport(ctx context.Context) error {

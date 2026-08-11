@@ -192,7 +192,7 @@ func (j *CleanGeneratedJob) setTaskProgress(taskProgress float64, progress *job.
 	progress.SetPercent((float64(j.tasksComplete) + taskProgress) / float64(j.totalTasks))
 }
 
-func (j *CleanGeneratedJob) logDelete(format string, args ...interface{}) {
+func (j *CleanGeneratedJob) logDelete(format string, args ...any) {
 	logger.Infof(j.dryRunPrefix+format, args...)
 }
 

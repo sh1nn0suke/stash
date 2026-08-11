@@ -685,7 +685,7 @@ func (r *mutationResolver) GenerateAPIKey(ctx context.Context, input GenerateAPI
 	return newAPIKey, nil
 }
 
-func (r *mutationResolver) ConfigureUI(ctx context.Context, input map[string]interface{}, partial map[string]interface{}) (map[string]interface{}, error) {
+func (r *mutationResolver) ConfigureUI(ctx context.Context, input map[string]any, partial map[string]any) (map[string]any, error) {
 	c := config.GetInstance()
 
 	if input != nil {
@@ -710,13 +710,13 @@ func (r *mutationResolver) ConfigureUI(ctx context.Context, input map[string]int
 	return c.GetUIConfiguration(), nil
 }
 
-func (r *mutationResolver) ConfigureUISetting(ctx context.Context, key string, value interface{}) (map[string]interface{}, error) {
+func (r *mutationResolver) ConfigureUISetting(ctx context.Context, key string, value any) (map[string]any, error) {
 	c := config.GetInstance()
 
 	cfg := utils.NestedMap(c.GetUIConfiguration())
 
 	// #5483 - convert JSON numbers to float64 or int64
-	if m, ok := value.(map[string]interface{}); ok {
+	if m, ok := value.(map[string]any); ok {
 		value = convertMapJSONNumbers(m)
 	} else if n, ok := value.(json.Number); ok {
 		value = jsonNumberToNumber(n)
@@ -727,7 +727,7 @@ func (r *mutationResolver) ConfigureUISetting(ctx context.Context, key string, v
 	return r.ConfigureUI(ctx, cfg, nil)
 }
 
-func (r *mutationResolver) ConfigurePlugin(ctx context.Context, pluginID string, input map[string]interface{}) (map[string]interface{}, error) {
+func (r *mutationResolver) ConfigurePlugin(ctx context.Context, pluginID string, input map[string]any) (map[string]any, error) {
 	c := config.GetInstance()
 
 	// #5483 - convert JSON numbers to float64 or int64

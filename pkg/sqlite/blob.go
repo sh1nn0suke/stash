@@ -168,7 +168,7 @@ func (e *ChecksumBlobNotExistError) Error() string {
 	return fmt.Sprintf("blob for checksum %s does not exist", e.Checksum)
 }
 
-func (qb *BlobStore) readSQL(ctx context.Context, querySQL string, args ...interface{}) ([]byte, string, error) {
+func (qb *BlobStore) readSQL(ctx context.Context, querySQL string, args ...any) ([]byte, string, error) {
 	if !qb.options.UseDatabase && !qb.options.UseFilesystem {
 		panic("no blob store configured")
 	}
@@ -404,7 +404,7 @@ SELECT {joinTable}.{joinCol} FROM {joinTable} WHERE {joinTable}.id = ?
 	})
 
 	var checksum null.String
-	err := qb.repository.querySimple(ctx, sqlQuery, []interface{}{id}, &checksum)
+	err := qb.repository.querySimple(ctx, sqlQuery, []any{id}, &checksum)
 	if err != nil {
 		return nil, err
 	}
@@ -441,7 +441,7 @@ func (qb *blobJoinQueryBuilder) HasImage(ctx context.Context, id int, blobCol st
 		"joinCol":   blobCol,
 	})
 
-	c, err := qb.repository.runCountQuery(ctx, stmt, []interface{}{id})
+	c, err := qb.repository.runCountQuery(ctx, stmt, []any{id})
 	if err != nil {
 		return false, err
 	}

@@ -294,7 +294,7 @@ generate: generate-backend generate-ui
 
 .PHONY: generate-ui
 generate-ui:
-	cd ui/v2.5 && pnpm run gqlgen
+	cd ui/v2.6 && npm run gqlgen
 
 .PHONY: generate-backend
 generate-backend: touch-ui

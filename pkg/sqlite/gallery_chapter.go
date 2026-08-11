@@ -228,11 +228,11 @@ func (qb *GalleryChapterStore) FindByGalleryID(ctx context.Context, galleryID in
 		GROUP BY galleries_chapters.id
 		ORDER BY galleries_chapters.image_index ASC
 	`
-	args := []interface{}{galleryID}
+	args := []any{galleryID}
 	return qb.queryGalleryChapters(ctx, query, args)
 }
 
-func (qb *GalleryChapterStore) queryGalleryChapters(ctx context.Context, query string, args []interface{}) ([]*models.GalleryChapter, error) {
+func (qb *GalleryChapterStore) queryGalleryChapters(ctx context.Context, query string, args []any) ([]*models.GalleryChapter, error) {
 	const single = false
 	var ret []*models.GalleryChapter
 	if err := qb.queryFunc(ctx, query, args, single, func(r *sqlx.Rows) error {

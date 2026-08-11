@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -172,7 +173,7 @@ func (m *schema49Migrator) getDisplayOptions(data json.RawMessage) (json.RawMess
 		return nil, fmt.Errorf("failed to unmarshal display options: %w", err)
 	}
 
-	ret := make(map[string]interface{})
+	ret := make(map[string]any)
 	if opts.DisplayMode != nil {
 		ret["display_mode"] = *opts.DisplayMode
 	}
@@ -228,7 +229,7 @@ func (m *schema49Migrator) getObjectFilter(mode models.FilterMode, data json.Raw
 		return nil, fmt.Errorf("failed to unmarshal object filter: %w", err)
 	}
 
-	ret := make(map[string]interface{})
+	ret := make(map[string]any)
 	for _, raw := range c.Criteria {
 		if err := m.convertCriterion(mode, ret, raw); err != nil {
 			return nil, err
@@ -238,9 +239,9 @@ func (m *schema49Migrator) getObjectFilter(mode models.FilterMode, data json.Raw
 	return json.Marshal(ret)
 }
 
-func (m *schema49Migrator) convertCriterion(mode models.FilterMode, out map[string]interface{}, criterion string) error {
+func (m *schema49Migrator) convertCriterion(mode models.FilterMode, out map[string]any, criterion string) error {
 	// convert to a map
-	ret := make(map[string]interface{})
+	ret := make(map[string]any)
 
 	if err := json.Unmarshal([]byte(criterion), &ret); err != nil {
 		return fmt.Errorf("failed to unmarshal criterion: %w", err)
@@ -285,22 +286,17 @@ func (m *schema49Migrator) convertCriterion(mode models.FilterMode, out map[stri
 }
 
 func arrayContains(sl []string, name string) bool {
-	for _, value := range sl {
-		if value == name {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(sl, name)
 }
 
 // General Function for converting the types inside a criterion
-func (m *schema49Migrator) adjustCriterionValue(value interface{}, typ string) (interface{}, error) {
-	if mapvalue, ok := value.(map[string]interface{}); ok {
+func (m *schema49Migrator) adjustCriterionValue(value any, typ string) (any, error) {
+	if mapvalue, ok := value.(map[string]any); ok {
 		// Primitive values and lists of them
 		var err error
 		for _, next := range []string{"value", "value2"} {
 			if valmap, ok := mapvalue[next].([]string); ok {
-				var valNewMap []interface{}
+				var valNewMap []any
 				for index, v := range valmap {
 					valNewMap[index], err = m.convertValue(v, typ)
 					if err != nil {
@@ -338,7 +334,7 @@ func (m *schema49Migrator) adjustCriterionValue(value interface{}, typ string) (
 	} else if _, ok := value.(string); ok {
 		// Singular Primitive Values
 		return m.convertValue(value, typ)
-	} else if listvalue, ok := value.([]interface{}); ok {
+	} else if listvalue, ok := value.([]any); ok {
 		// Items as a singular value, as well as singular lists
 		var err error
 		if typ == "object" {
@@ -367,13 +363,13 @@ func (m *schema49Migrator) adjustCriterionValue(value interface{}, typ string) (
 }
 
 // Converts values inside a criterion that represent some objects, like performer or studio.
-func (m *schema49Migrator) adjustCriterionItem(value interface{}) (interface{}, error) {
+func (m *schema49Migrator) adjustCriterionItem(value any) (any, error) {
 	// Basically, this first converts step by step the value, after that it adjusts id and Depth (of parent/child studios) to int
-	if itemlist, ok := value.([]interface{}); ok {
-		var itemNewList []interface{}
+	if itemlist, ok := value.([]any); ok {
+		var itemNewList []any
 		for _, val := range itemlist {
-			if val, ok := val.(map[string]interface{}); ok {
-				newItem := make(map[string]interface{})
+			if val, ok := val.(map[string]any); ok {
+				newItem := make(map[string]any)
 				for index, v := range val {
 					if v, ok := v.(string); ok {
 						switch index {
@@ -399,7 +395,7 @@ func (m *schema49Migrator) adjustCriterionItem(value interface{}) (interface{}, 
 }
 
 // Converts a value of type string to its according type, given by string
-func (m *schema49Migrator) convertValue(value interface{}, typ string) (interface{}, error) {
+func (m *schema49Migrator) convertValue(value any, typ string) (any, error) {
 	valueType := reflect.TypeOf(value).Name()
 	if typ == valueType || (typ == "int" && valueType == "float64") || (typ == "float64" && valueType == "int") || value == "" {
 		return value, nil

@@ -21,7 +21,7 @@ type repository struct {
 
 func (r *repository) getAll(ctx context.Context, id int, f func(rows *sqlx.Rows) error) error {
 	stmt := fmt.Sprintf("SELECT * FROM %s WHERE %s = ?", r.tableName, r.idColumn)
-	return r.queryFunc(ctx, stmt, []interface{}{id}, false, f)
+	return r.queryFunc(ctx, stmt, []any{id}, false, f)
 }
 
 func (r *repository) destroyExisting(ctx context.Context, ids []int) error {
@@ -54,7 +54,7 @@ func (r *repository) exists(ctx context.Context, id int) (bool, error) {
 	stmt := fmt.Sprintf("SELECT %s FROM %s WHERE %s = ? LIMIT 1", r.idColumn, r.tableName, r.idColumn)
 	stmt = r.buildCountQuery(stmt)
 
-	c, err := r.runCountQuery(ctx, stmt, []interface{}{id})
+	c, err := r.runCountQuery(ctx, stmt, []any{id})
 	if err != nil {
 		return false, err
 	}
@@ -66,7 +66,7 @@ func (r *repository) buildCountQuery(query string) string {
 	return "SELECT COUNT(*) as count FROM (" + query + ") as temp"
 }
 
-func (r *repository) runCountQuery(ctx context.Context, query string, args []interface{}) (int, error) {
+func (r *repository) runCountQuery(ctx context.Context, query string, args []any) (int, error) {
 	result := struct {
 		Int int `db:"count"`
 	}{0}
@@ -79,7 +79,7 @@ func (r *repository) runCountQuery(ctx context.Context, query string, args []int
 	return result.Int, nil
 }
 
-func (r *repository) runIdsQuery(ctx context.Context, query string, args []interface{}) ([]int, error) {
+func (r *repository) runIdsQuery(ctx context.Context, query string, args []any) ([]int, error) {
 	var result []struct {
 		Int int `db:"id"`
 	}
@@ -95,7 +95,7 @@ func (r *repository) runIdsQuery(ctx context.Context, query string, args []inter
 	return vsm, nil
 }
 
-func (r *repository) queryFunc(ctx context.Context, query string, args []interface{}, single bool, f func(rows *sqlx.Rows) error) error {
+func (r *repository) queryFunc(ctx context.Context, query string, args []any, single bool, f func(rows *sqlx.Rows) error) error {
 	rows, err := dbWrapper.QueryxContext(ctx, query, args...)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
@@ -121,7 +121,7 @@ func (r *repository) queryFunc(ctx context.Context, query string, args []interfa
 
 // queryStruct executes a query and scans the result into the provided struct.
 // Unlike the other query methods, this will return an error if no rows are found.
-func (r *repository) queryStruct(ctx context.Context, query string, args []interface{}, out interface{}) error {
+func (r *repository) queryStruct(ctx context.Context, query string, args []any, out any) error {
 	// changed from queryFunc, since it was not logging the performance correctly,
 	// since the query doesn't actually execute until Scan is called
 	if err := dbWrapper.Get(ctx, out, query, args...); err != nil {
@@ -131,7 +131,7 @@ func (r *repository) queryStruct(ctx context.Context, query string, args []inter
 	return nil
 }
 
-func (r *repository) querySimple(ctx context.Context, query string, args []interface{}, out interface{}) error {
+func (r *repository) querySimple(ctx context.Context, query string, args []any, out any) error {
 	rows, err := dbWrapper.Queryx(ctx, query, args...)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
@@ -164,7 +164,7 @@ func (r *repository) buildQueryBody(body string, whereClauses []string, havingCl
 	return body
 }
 
-func (r *repository) executeFindQuery(ctx context.Context, body string, args []interface{}, sortAndPagination string, whereClauses []string, havingClauses []string, withClauses []string, recursiveWith bool) ([]int, int, error) {
+func (r *repository) executeFindQuery(ctx context.Context, body string, args []any, sortAndPagination string, whereClauses []string, havingClauses []string, withClauses []string, recursiveWith bool) ([]int, int, error) {
 	body = r.buildQueryBody(body, whereClauses, havingClauses)
 
 	withClause := ""
@@ -229,8 +229,8 @@ func (r *repository) innerJoin(j joiner, as string, parentIDCol string) {
 }
 
 type joiner interface {
-	addLeftJoin(table, as, onClause string, args ...interface{})
-	addInnerJoin(table, as, onClause string, args ...interface{})
+	addLeftJoin(table, as, onClause string, args ...any)
+	addInnerJoin(table, as, onClause string, args ...any)
 }
 
 type joinRepository struct {
@@ -254,7 +254,7 @@ func (r *joinRepository) getIDs(ctx context.Context, id int) ([]int, error) {
 		query += " ORDER BY " + r.orderBy
 	}
 
-	return r.runIdsQuery(ctx, query, []interface{}{id})
+	return r.runIdsQuery(ctx, query, []any{id})
 }
 
 func (r *joinRepository) insert(ctx context.Context, id int, foreignIDs ...int) error {
@@ -293,7 +293,7 @@ func (r *joinRepository) insertOrIgnore(ctx context.Context, id int, foreignIDs 
 func (r *joinRepository) destroyJoins(ctx context.Context, id int, foreignIDs ...int) error {
 	stmt := fmt.Sprintf("DELETE FROM %s WHERE %s = ? AND %s IN %s", r.tableName, r.idColumn, r.fkColumn, getInBinding(len(foreignIDs)))
 
-	args := make([]interface{}, len(foreignIDs)+1)
+	args := make([]any, len(foreignIDs)+1)
 	args[0] = id
 	for i, v := range foreignIDs {
 		args[i+1] = v
@@ -327,7 +327,7 @@ type captionRepository struct {
 func (r *captionRepository) get(ctx context.Context, id models.FileID) ([]*models.VideoCaption, error) {
 	query := fmt.Sprintf("SELECT %s, %s, %s from %s WHERE %s = ?", captionCodeColumn, captionFilenameColumn, captionTypeColumn, r.tableName, r.idColumn)
 	var ret []*models.VideoCaption
-	err := r.queryFunc(ctx, query, []interface{}{id}, false, func(rows *sqlx.Rows) error {
+	err := r.queryFunc(ctx, query, []any{id}, false, func(rows *sqlx.Rows) error {
 		var captionCode string
 		var captionFilename string
 		var captionType string
@@ -374,7 +374,7 @@ type stringRepository struct {
 func (r *stringRepository) get(ctx context.Context, id int) ([]string, error) {
 	query := fmt.Sprintf("SELECT %s from %s WHERE %s = ?", r.stringColumn, r.tableName, r.idColumn)
 	var ret []string
-	err := r.queryFunc(ctx, query, []interface{}{id}, false, func(rows *sqlx.Rows) error {
+	err := r.queryFunc(ctx, query, []any{id}, false, func(rows *sqlx.Rows) error {
 		var out string
 		if err := rows.Scan(&out); err != nil {
 			return err
@@ -411,18 +411,18 @@ type stashIDRepository struct {
 
 type stashIDs []models.StashID
 
-func (s *stashIDs) Append(o interface{}) {
+func (s *stashIDs) Append(o any) {
 	*s = append(*s, o.(models.StashID))
 }
 
-func (s *stashIDs) New() interface{} {
+func (s *stashIDs) New() any {
 	return &models.StashID{}
 }
 
 func (r *stashIDRepository) get(ctx context.Context, id int) ([]models.StashID, error) {
 	query := fmt.Sprintf("SELECT stash_id, endpoint, updated_at from %s WHERE %s = ?", r.tableName, r.idColumn)
 	var ret stashIDs
-	err := r.queryFunc(ctx, query, []interface{}{id}, false, func(rows *sqlx.Rows) error {
+	err := r.queryFunc(ctx, query, []any{id}, false, func(rows *sqlx.Rows) error {
 		var v stashIDRow
 		if err := rows.StructScan(&v); err != nil {
 			return err
@@ -459,7 +459,7 @@ func (r *filesRepository) getMany(ctx context.Context, ids []int, primaryOnly bo
 
 	query := fmt.Sprintf("SELECT %s as id, file_id, `primary` from %s WHERE %[1]s IN %[3]s%s", r.idColumn, r.tableName, getInBinding(len(ids)), primaryClause)
 
-	idi := make([]interface{}, len(ids))
+	idi := make([]any, len(ids))
 	for i, id := range ids {
 		idi[i] = id
 	}
@@ -506,7 +506,7 @@ func (r *filesRepository) get(ctx context.Context, id int) ([]models.FileID, err
 	}
 
 	var ret []models.FileID
-	if err := r.queryFunc(ctx, query, []interface{}{id}, false, func(rows *sqlx.Rows) error {
+	if err := r.queryFunc(ctx, query, []any{id}, false, func(rows *sqlx.Rows) error {
 		var f relatedFile
 
 		if err := rows.StructScan(&f); err != nil {

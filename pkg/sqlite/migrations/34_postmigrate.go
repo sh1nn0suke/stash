@@ -99,7 +99,7 @@ func (m *schema34Migrator) migrateObjects(ctx context.Context, table string, col
 					id int
 				)
 
-				timeValues := make([]interface{}, len(cols)+1)
+				timeValues := make([]any, len(cols)+1)
 				timeValues[0] = &id
 				for i := range cols {
 					v := time.Time{}
@@ -117,7 +117,7 @@ func (m *schema34Migrator) migrateObjects(ctx context.Context, table string, col
 
 				// convert incorrect timestamp string to correct one
 				// based on models.SQLTimestamp
-				args := make([]interface{}, len(cols)+1)
+				args := make([]any, len(cols)+1)
 				for i := range cols {
 					tv := timeValues[i+1].(*time.Time)
 					args[i] = tv.Format(time.RFC3339)

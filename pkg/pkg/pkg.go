@@ -23,7 +23,7 @@ type Time struct {
 	time.Time
 }
 
-func (t *Time) UnmarshalYAML(unmarshal func(interface{}) error) error {
+func (t *Time) UnmarshalYAML(unmarshal func(any) error) error {
 	var s string
 	if err := unmarshal(&s); err != nil {
 		return err
@@ -48,11 +48,11 @@ func (t *Time) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	return nil
 }
 
-func (t Time) MarshalYAML() (interface{}, error) {
+func (t Time) MarshalYAML() (any, error) {
 	return t.Format(TimeFormat), nil
 }
 
-type PackageMetadata map[string]interface{}
+type PackageMetadata map[string]any
 
 type PackageVersion struct {
 	Version string `yaml:"version"`

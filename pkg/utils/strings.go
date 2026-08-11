@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-type StrFormatMap map[string]interface{}
+type StrFormatMap map[string]any
 
 // StrFormat formats the provided format string, replacing placeholders
 // in the form of "{fieldName}" with the values in the provided

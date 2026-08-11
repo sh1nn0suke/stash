@@ -7,8 +7,8 @@ import (
 
 func TestNestedMapGet(t *testing.T) {
 	m := NestedMap{
-		"foo": map[string]interface{}{
-			"bar": map[string]interface{}{
+		"foo": map[string]any{
+			"bar": map[string]any{
 				"baz": "qux",
 			},
 		},
@@ -17,7 +17,7 @@ func TestNestedMapGet(t *testing.T) {
 	tests := []struct {
 		name  string
 		key   string
-		want  interface{}
+		want  any
 		found bool
 	}{
 		{
@@ -47,7 +47,7 @@ func TestNestedMapGet(t *testing.T) {
 		{
 			name:  "Get a value from a nested map with a missing key",
 			key:   "foo.bar",
-			want:  map[string]interface{}{"baz": "qux"},
+			want:  map[string]any{"baz": "qux"},
 			found: true,
 		},
 	}
@@ -77,8 +77,8 @@ func TestNestedMapSet(t *testing.T) {
 			key:      "foo.bar.baz",
 			existing: NestedMap{},
 			want: NestedMap{
-				"foo": map[string]interface{}{
-					"bar": map[string]interface{}{
+				"foo": map[string]any{
+					"bar": map[string]any{
 						"baz": "qux",
 					},
 				},
@@ -88,12 +88,12 @@ func TestNestedMapSet(t *testing.T) {
 			name: "Overwrite existing value",
 			key:  "foo.bar",
 			existing: NestedMap{
-				"foo": map[string]interface{}{
+				"foo": map[string]any{
 					"bar": "old",
 				},
 			},
 			want: NestedMap{
-				"foo": map[string]interface{}{
+				"foo": map[string]any{
 					"bar": "qux",
 				},
 			},
@@ -105,7 +105,7 @@ func TestNestedMapSet(t *testing.T) {
 				"foo": "bar",
 			},
 			want: NestedMap{
-				"foo": map[string]interface{}{
+				"foo": map[string]any{
 					"bar": "qux",
 				},
 			},
@@ -133,15 +133,15 @@ func TestNestedMapDelete(t *testing.T) {
 			name: "Delete non existing value",
 			key:  "foo.bar.baa",
 			existing: NestedMap{
-				"foo": map[string]interface{}{
-					"bar": map[string]interface{}{
+				"foo": map[string]any{
+					"bar": map[string]any{
 						"baz": "qux",
 					},
 				},
 			},
 			want: NestedMap{
-				"foo": map[string]interface{}{
-					"bar": map[string]interface{}{
+				"foo": map[string]any{
+					"bar": map[string]any{
 						"baz": "qux",
 					},
 				},
@@ -151,26 +151,26 @@ func TestNestedMapDelete(t *testing.T) {
 			name: "Delete existing value",
 			key:  "foo.bar",
 			existing: NestedMap{
-				"foo": map[string]interface{}{
+				"foo": map[string]any{
 					"bar": "old",
 				},
 			},
 			want: NestedMap{
-				"foo": map[string]interface{}{},
+				"foo": map[string]any{},
 			},
 		},
 		{
 			name: "Delete existing map",
 			key:  "foo.bar",
 			existing: NestedMap{
-				"foo": map[string]interface{}{
-					"bar": map[string]interface{}{
+				"foo": map[string]any{
+					"bar": map[string]any{
 						"baz": "qux",
 					},
 				},
 			},
 			want: NestedMap{
-				"foo": map[string]interface{}{},
+				"foo": map[string]any{},
 			},
 		},
 	}
@@ -188,51 +188,51 @@ func TestNestedMapDelete(t *testing.T) {
 func TestMergeMaps(t *testing.T) {
 	tests := []struct {
 		name   string
-		dest   map[string]interface{}
-		src    map[string]interface{}
-		result map[string]interface{}
+		dest   map[string]any
+		src    map[string]any
+		result map[string]any
 	}{
 		{
 			name: "Merge two maps",
-			dest: map[string]interface{}{
+			dest: map[string]any{
 				"foo": "bar",
 			},
-			src: map[string]interface{}{
+			src: map[string]any{
 				"baz": "qux",
 			},
-			result: map[string]interface{}{
+			result: map[string]any{
 				"foo": "bar",
 				"baz": "qux",
 			},
 		},
 		{
 			name: "Merge two maps with overlapping keys",
-			dest: map[string]interface{}{
+			dest: map[string]any{
 				"foo": "bar",
 				"baz": "qux",
 			},
-			src: map[string]interface{}{
+			src: map[string]any{
 				"baz": "quux",
 			},
-			result: map[string]interface{}{
+			result: map[string]any{
 				"foo": "bar",
 				"baz": "quux",
 			},
 		},
 		{
 			name: "Merge two maps with overlapping keys and nested maps",
-			dest: map[string]interface{}{
-				"foo": map[string]interface{}{
+			dest: map[string]any{
+				"foo": map[string]any{
 					"bar": "baz",
 				},
 			},
-			src: map[string]interface{}{
-				"foo": map[string]interface{}{
+			src: map[string]any{
+				"foo": map[string]any{
 					"qux": "quux",
 				},
 			},
-			result: map[string]interface{}{
-				"foo": map[string]interface{}{
+			result: map[string]any{
+				"foo": map[string]any{
 					"bar": "baz",
 					"qux": "quux",
 				},
@@ -240,30 +240,30 @@ func TestMergeMaps(t *testing.T) {
 		},
 		{
 			name: "Merge two maps with overlapping keys and nested maps",
-			dest: map[string]interface{}{
-				"foo": map[string]interface{}{
+			dest: map[string]any{
+				"foo": map[string]any{
 					"bar": "baz",
 				},
 			},
-			src: map[string]interface{}{
+			src: map[string]any{
 				"foo": "qux",
 			},
-			result: map[string]interface{}{
+			result: map[string]any{
 				"foo": "qux",
 			},
 		},
 		{
 			name: "Merge two maps with overlapping keys and nested maps",
-			dest: map[string]interface{}{
+			dest: map[string]any{
 				"foo": "qux",
 			},
-			src: map[string]interface{}{
-				"foo": map[string]interface{}{
+			src: map[string]any{
+				"foo": map[string]any{
 					"bar": "baz",
 				},
 			},
-			result: map[string]interface{}{
-				"foo": map[string]interface{}{
+			result: map[string]any{
+				"foo": map[string]any{
 					"bar": "baz",
 				},
 			},

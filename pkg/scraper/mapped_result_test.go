@@ -96,7 +96,7 @@ func TestMappedResultStringPtr(t *testing.T) {
 			name:          "valid string",
 			data:          mappedResult{"name": "test"},
 			key:           "name",
-			expectedValue: strPtr("test"),
+			expectedValue: new("test"),
 		},
 		{
 			name:          "missing key returns nil",
@@ -108,7 +108,7 @@ func TestMappedResultStringPtr(t *testing.T) {
 			name:          "wrong type returns non-nil pointer to empty string",
 			data:          mappedResult{"num": 123},
 			key:           "num",
-			expectedValue: strPtr(""), // string() returns empty string but ok=true
+			expectedValue: new(""), // string() returns empty string but ok=true
 		},
 	}
 
@@ -185,7 +185,7 @@ func TestMappedResultIntPtr(t *testing.T) {
 			name:          "valid int",
 			data:          mappedResult{"duration": 120},
 			key:           "duration",
-			expectedValue: intPtr(120),
+			expectedValue: new(120),
 		},
 		{
 			name:          "missing key returns nil",
@@ -203,7 +203,7 @@ func TestMappedResultIntPtr(t *testing.T) {
 			name:          "zero value",
 			data:          mappedResult{"duration": 0},
 			key:           "duration",
-			expectedValue: intPtr(0),
+			expectedValue: new(0),
 		},
 	}
 
@@ -899,10 +899,13 @@ func TestMappedResultsScrapedGroups(t *testing.T) {
 }
 
 // Helper functions
+//
+//go:fix inline
 func strPtr(s string) *string {
-	return &s
+	return new(s)
 }
 
+//go:fix inline
 func intPtr(i int) *int {
-	return &i
+	return new(i)
 }

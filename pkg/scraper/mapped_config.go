@@ -145,16 +145,16 @@ const (
 	mappedScraperConfigSceneGroups     = "Groups"
 )
 
-func (s *mappedSceneScraperConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
+func (s *mappedSceneScraperConfig) UnmarshalYAML(unmarshal func(any) error) error {
 	// HACK - unmarshal to map first, then remove known scene sub-fields, then
 	// remarshal to yaml and pass that down to the base map
-	parentMap := make(map[string]interface{})
+	parentMap := make(map[string]any)
 	if err := unmarshal(parentMap); err != nil {
 		return err
 	}
 
 	// move the known sub-fields to a separate map
-	thisMap := make(map[string]interface{})
+	thisMap := make(map[string]any)
 
 	thisMap[mappedScraperConfigSceneTags] = parentMap[mappedScraperConfigSceneTags]
 	thisMap[mappedScraperConfigScenePerformers] = parentMap[mappedScraperConfigScenePerformers]
@@ -204,16 +204,16 @@ type mappedGalleryScraperConfig struct {
 
 type _mappedGalleryScraperConfig mappedGalleryScraperConfig
 
-func (s *mappedGalleryScraperConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
+func (s *mappedGalleryScraperConfig) UnmarshalYAML(unmarshal func(any) error) error {
 	// HACK - unmarshal to map first, then remove known scene sub-fields, then
 	// remarshal to yaml and pass that down to the base map
-	parentMap := make(map[string]interface{})
+	parentMap := make(map[string]any)
 	if err := unmarshal(parentMap); err != nil {
 		return err
 	}
 
 	// move the known sub-fields to a separate map
-	thisMap := make(map[string]interface{})
+	thisMap := make(map[string]any)
 
 	thisMap[mappedScraperConfigSceneTags] = parentMap[mappedScraperConfigSceneTags]
 	thisMap[mappedScraperConfigScenePerformers] = parentMap[mappedScraperConfigScenePerformers]
@@ -258,16 +258,16 @@ type mappedImageScraperConfig struct {
 }
 type _mappedImageScraperConfig mappedImageScraperConfig
 
-func (s *mappedImageScraperConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
+func (s *mappedImageScraperConfig) UnmarshalYAML(unmarshal func(any) error) error {
 	// HACK - unmarshal to map first, then remove known scene sub-fields, then
 	// remarshal to yaml and pass that down to the base map
-	parentMap := make(map[string]interface{})
+	parentMap := make(map[string]any)
 	if err := unmarshal(parentMap); err != nil {
 		return err
 	}
 
 	// move the known sub-fields to a separate map
-	thisMap := make(map[string]interface{})
+	thisMap := make(map[string]any)
 
 	thisMap[mappedScraperConfigSceneTags] = parentMap[mappedScraperConfigSceneTags]
 	thisMap[mappedScraperConfigScenePerformers] = parentMap[mappedScraperConfigScenePerformers]
@@ -314,16 +314,16 @@ const (
 	mappedScraperConfigPerformerTags = "Tags"
 )
 
-func (s *mappedPerformerScraperConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
+func (s *mappedPerformerScraperConfig) UnmarshalYAML(unmarshal func(any) error) error {
 	// HACK - unmarshal to map first, then remove known scene sub-fields, then
 	// remarshal to yaml and pass that down to the base map
-	parentMap := make(map[string]interface{})
+	parentMap := make(map[string]any)
 	if err := unmarshal(parentMap); err != nil {
 		return err
 	}
 
 	// move the known sub-fields to a separate map
-	thisMap := make(map[string]interface{})
+	thisMap := make(map[string]any)
 
 	thisMap[mappedScraperConfigPerformerTags] = parentMap[mappedScraperConfigPerformerTags]
 
@@ -368,16 +368,16 @@ const (
 	mappedScraperConfigMovieTags   = "Tags"
 )
 
-func (s *mappedMovieScraperConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
+func (s *mappedMovieScraperConfig) UnmarshalYAML(unmarshal func(any) error) error {
 	// HACK - unmarshal to map first, then remove known movie sub-fields, then
 	// remarshal to yaml and pass that down to the base map
-	parentMap := make(map[string]interface{})
+	parentMap := make(map[string]any)
 	if err := unmarshal(parentMap); err != nil {
 		return err
 	}
 
 	// move the known sub-fields to a separate map
-	thisMap := make(map[string]interface{})
+	thisMap := make(map[string]any)
 
 	thisMap[mappedScraperConfigMovieStudio] = parentMap[mappedScraperConfigMovieStudio]
 	delete(parentMap, mappedScraperConfigMovieStudio)
@@ -428,7 +428,7 @@ type mappedScraperAttrConfig struct {
 
 type _mappedScraperAttrConfig mappedScraperAttrConfig
 
-func (c *mappedScraperAttrConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
+func (c *mappedScraperAttrConfig) UnmarshalYAML(unmarshal func(any) error) error {
 	// try unmarshalling into a string first
 	if err := unmarshal(&c.Selector); err != nil {
 		// if it's a type error then we try to unmarshall to the full object
@@ -519,7 +519,7 @@ func (c mappedScraperAttrConfig) splitString(value string) []string {
 		return []string{value}
 	}
 
-	for _, str := range strings.Split(value, separator) {
+	for str := range strings.SplitSeq(value, separator) {
 		if str != "" {
 			res = append(res, str)
 		}

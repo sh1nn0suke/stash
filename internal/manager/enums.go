@@ -32,7 +32,7 @@ func (e SystemStatusEnum) String() string {
 	return string(e)
 }
 
-func (e *SystemStatusEnum) UnmarshalGQL(v interface{}) error {
+func (e *SystemStatusEnum) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")

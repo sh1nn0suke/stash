@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"slices"
 	"strconv"
 )
 
@@ -14,7 +15,7 @@ var (
 // Fingerprint represents a fingerprint of a file.
 type Fingerprint struct {
 	Type        string
-	Fingerprint interface{}
+	Fingerprint any
 }
 
 func (f *Fingerprint) Value() string {
@@ -58,11 +59,8 @@ func (f Fingerprints) Filter(types ...string) Fingerprints {
 	var ret Fingerprints
 
 	for _, ff := range f {
-		for _, t := range types {
-			if ff.Type == t {
-				ret = append(ret, ff)
-				break
-			}
+		if slices.Contains(types, ff.Type) {
+			ret = append(ret, ff)
 		}
 	}
 
@@ -76,13 +74,7 @@ func (f Fingerprints) Equals(other Fingerprints) bool {
 	}
 
 	for _, ff := range f {
-		found := false
-		for _, oo := range other {
-			if ff == oo {
-				found = true
-				break
-			}
-		}
+		found := slices.Contains(other, ff)
 
 		if !found {
 			return false
@@ -115,7 +107,7 @@ func (f Fingerprints) For(type_ string) *Fingerprint {
 	return nil
 }
 
-func (f Fingerprints) Get(type_ string) interface{} {
+func (f Fingerprints) Get(type_ string) any {
 	fp := f.For(type_)
 	if fp == nil {
 		return nil

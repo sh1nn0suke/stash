@@ -64,9 +64,9 @@ func (t *GenerateImagePhashTask) Start(ctx context.Context) {
 	}
 }
 
-func (t *GenerateImagePhashTask) findExistingPhash(ctx context.Context) (interface{}, error) {
+func (t *GenerateImagePhashTask) findExistingPhash(ctx context.Context) (any, error) {
 	r := t.repository
-	var ret interface{}
+	var ret any
 	if err := r.WithReadTxn(ctx, func(ctx context.Context) error {
 		md5 := t.File.Fingerprints.Get(models.FingerprintTypeMD5)
 

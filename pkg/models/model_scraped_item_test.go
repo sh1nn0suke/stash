@@ -126,7 +126,7 @@ func Test_scrapedToPerformerInput(t *testing.T) {
 
 	const nValues = 19
 	stringValues := make([]string, nValues)
-	for i := 0; i < nValues; i++ {
+	for i := range nValues {
 		stringValues[i] = strconv.Itoa(i)
 	}
 

@@ -123,9 +123,9 @@ func (f *videoFileQueryRow) resolve() *models.VideoFile {
 	}
 }
 
-func videoFileQueryColumns() []interface{} {
+func videoFileQueryColumns() []any {
 	table := videoFileTableMgr.table
-	return []interface{}{
+	return []any{
 		table.Col("file_id").As("file_id_video"),
 		table.Col("format").As("video_format"),
 		table.Col("width").As("video_width"),
@@ -148,9 +148,9 @@ type imageFileQueryRow struct {
 	Height null.Int    `db:"image_height"`
 }
 
-func (imageFileQueryRow) columns(table *table) []interface{} {
+func (imageFileQueryRow) columns(table *table) []any {
 	ex := table.table
-	return []interface{}{
+	return []any{
 		ex.Col("format").As("image_format"),
 		ex.Col("width").As("image_width"),
 		ex.Col("height").As("image_height"),
@@ -485,7 +485,7 @@ func (qb *FileStore) selectDataset() *goqu.SelectDataset {
 	zipFileTable := table.As("zip_files")
 	zipFolderTable := folderTable.As("zip_files_folders")
 
-	cols := []interface{}{
+	cols := []any{
 		table.Col("id").As("file_id"),
 		table.Col("basename"),
 		table.Col("zip_file_id"),

@@ -27,7 +27,7 @@ func MarshalTimestamp(t time.Time) graphql.Marshaler {
 	})
 }
 
-func UnmarshalTimestamp(v interface{}) (time.Time, error) {
+func UnmarshalTimestamp(v any) (time.Time, error) {
 	if tmpStr, ok := v.(string); ok {
 		if len(tmpStr) == 0 {
 			return time.Time{}, fmt.Errorf("%w: empty string", ErrTimestamp)

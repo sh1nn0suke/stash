@@ -65,9 +65,9 @@ func (t *GeneratePhashTask) Start(ctx context.Context) {
 	}
 }
 
-func (t *GeneratePhashTask) findExistingPhash(ctx context.Context) (interface{}, error) {
+func (t *GeneratePhashTask) findExistingPhash(ctx context.Context) (any, error) {
 	r := t.repository
-	var ret interface{}
+	var ret any
 	if err := r.WithReadTxn(ctx, func(ctx context.Context) error {
 		oshash := t.File.Fingerprints.Get(models.FingerprintTypeOshash)
 

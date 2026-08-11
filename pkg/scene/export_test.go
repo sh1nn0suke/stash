@@ -85,8 +85,8 @@ var (
 )
 
 var (
-	emptyCustomFields = make(map[string]interface{})
-	customFields      = map[string]interface{}{
+	emptyCustomFields = make(map[string]any)
+	customFields      = map[string]any{
 		"customField1": "customValue1",
 	}
 )
@@ -132,7 +132,7 @@ func createEmptyScene(id int) models.Scene {
 	}
 }
 
-func createFullJSONScene(image string, customFields map[string]interface{}) *jsonschema.Scene {
+func createFullJSONScene(image string, customFields map[string]any) *jsonschema.Scene {
 	return &jsonschema.Scene{
 		Title:     title,
 		Files:     []string{path},
@@ -171,7 +171,7 @@ func createEmptyJSONScene() *jsonschema.Scene {
 
 type basicTestScenario struct {
 	input        models.Scene
-	customFields map[string]interface{}
+	customFields map[string]any
 	expected     *jsonschema.Scene
 	err          bool
 }

@@ -487,14 +487,14 @@ func (i *Config) SetFloat(key string, value float64) {
 	i.SetInterface(key, value)
 }
 
-func (i *Config) SetInterface(key string, value interface{}) {
+func (i *Config) SetInterface(key string, value any) {
 	i.Lock()
 	defer i.Unlock()
 
 	i.set(key, value)
 }
 
-func (i *Config) set(key string, value interface{}) {
+func (i *Config) set(key string, value any) {
 	// assumes lock held
 
 	// default behaviour for Set is to merge the value
@@ -507,21 +507,21 @@ func (i *Config) set(key string, value interface{}) {
 
 	// test for nil interface as well
 	refVal := reflect.ValueOf(value)
-	if refVal.Kind() == reflect.Ptr && refVal.IsNil() {
+	if refVal.Kind() == reflect.Pointer && refVal.IsNil() {
 		return
 	}
 
 	_ = i.main.Set(key, value)
 }
 
-func (i *Config) SetDefault(key string, value interface{}) {
+func (i *Config) SetDefault(key string, value any) {
 	i.Lock()
 	defer i.Unlock()
 
 	i.setDefault(key, value)
 }
 
-func (i *Config) setDefault(key string, value interface{}) {
+func (i *Config) setDefault(key string, value any) {
 	if !i.main.Exists(key) {
 		i.set(key, value)
 	}
@@ -632,7 +632,7 @@ func (i *Config) HasOverride(key string) bool {
 // These functions wrap the equivalent viper functions, checking the override
 // instance first, then the main instance.
 
-func (i *Config) unmarshalKey(key string, rawVal interface{}) error {
+func (i *Config) unmarshalKey(key string, rawVal any) error {
 	i.RLock()
 	defer i.RUnlock()
 
@@ -943,11 +943,11 @@ func (i *Config) GetPluginsPath() string {
 	return i.getString(PluginsPath)
 }
 
-func (i *Config) GetAllPluginConfiguration() map[string]map[string]interface{} {
+func (i *Config) GetAllPluginConfiguration() map[string]map[string]any {
 	i.RLock()
 	defer i.RUnlock()
 
-	ret := make(map[string]map[string]interface{})
+	ret := make(map[string]map[string]any)
 
 	v := i.forKey(PluginsSetting)
 
@@ -963,7 +963,7 @@ func (i *Config) GetAllPluginConfiguration() map[string]map[string]interface{} {
 	return ret
 }
 
-func (i *Config) GetPluginConfiguration(pluginID string) map[string]interface{} {
+func (i *Config) GetPluginConfiguration(pluginID string) map[string]any {
 	i.RLock()
 	defer i.RUnlock()
 
@@ -974,7 +974,7 @@ func (i *Config) GetPluginConfiguration(pluginID string) map[string]interface{} 
 
 // SetPluginConfiguration sets the configuration for a plugin.
 // It will overwrite any existing configuration.
-func (i *Config) SetPluginConfiguration(pluginID string, v map[string]interface{}) {
+func (i *Config) SetPluginConfiguration(pluginID string, v map[string]any) {
 	i.Lock()
 	defer i.Unlock()
 
@@ -1453,7 +1453,7 @@ func (i *Config) GetDisableDropdownCreate() *ConfigDisableDropdownCreate {
 	}
 }
 
-func (i *Config) GetUIConfiguration() map[string]interface{} {
+func (i *Config) GetUIConfiguration() map[string]any {
 	i.RLock()
 	defer i.RUnlock()
 
@@ -1480,7 +1480,7 @@ func (i *Config) GetMinimumPlayPercent() int {
 	return 0
 }
 
-func (i *Config) SetUIConfiguration(v map[string]interface{}) {
+func (i *Config) SetUIConfiguration(v map[string]any) {
 	i.Lock()
 	defer i.Unlock()
 

@@ -33,7 +33,7 @@ func (p rpcPluginClient) RunAsync(input common.PluginInput, output *common.Plugi
 }
 
 func (p rpcPluginClient) Stop() error {
-	var resp interface{}
+	var resp any
 	return p.Client.Call("RPCRunner.Stop", nil, &resp)
 }
 

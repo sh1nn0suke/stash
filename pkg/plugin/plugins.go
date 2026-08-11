@@ -295,7 +295,7 @@ func (c Cache) CreateTask(ctx context.Context, pluginID string, operationName *s
 	return task.createTask(), nil
 }
 
-func (c Cache) RunPlugin(ctx context.Context, pluginID string, args OperationInput) (interface{}, error) {
+func (c Cache) RunPlugin(ctx context.Context, pluginID string, args OperationInput) (any, error) {
 	serverConnection := c.makeServerConnection(ctx)
 
 	if c.pluginDisabled(pluginID) {
@@ -357,7 +357,7 @@ func waitForTask(ctx context.Context, task Task) error {
 	return nil
 }
 
-func (c Cache) ExecutePostHooks(ctx context.Context, id int, hookType hook.TriggerEnum, input interface{}, inputFields []string) {
+func (c Cache) ExecutePostHooks(ctx context.Context, id int, hookType hook.TriggerEnum, input any, inputFields []string) {
 	if err := c.executePostHooks(ctx, hookType, common.HookContext{
 		ID:          id,
 		Type:        hookType.String(),
@@ -368,7 +368,7 @@ func (c Cache) ExecutePostHooks(ctx context.Context, id int, hookType hook.Trigg
 	}
 }
 
-func (c Cache) RegisterPostHooks(ctx context.Context, id int, hookType hook.TriggerEnum, input interface{}, inputFields []string) {
+func (c Cache) RegisterPostHooks(ctx context.Context, id int, hookType hook.TriggerEnum, input any, inputFields []string) {
 	txn.AddPostCommitHook(ctx, func(ctx context.Context) {
 		c.ExecutePostHooks(ctx, id, hookType, input, inputFields)
 	})

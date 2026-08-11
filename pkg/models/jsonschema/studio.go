@@ -15,8 +15,8 @@ type Studio struct {
 	URLs          []string         `json:"urls,omitempty"`
 	ParentStudio  string           `json:"parent_studio,omitempty"`
 	Image         string           `json:"image,omitempty"`
-	CreatedAt     json.JSONTime    `json:"created_at,omitempty"`
-	UpdatedAt     json.JSONTime    `json:"updated_at,omitempty"`
+	CreatedAt     json.JSONTime    `json:"created_at"`
+	UpdatedAt     json.JSONTime    `json:"updated_at"`
 	Rating        int              `json:"rating,omitempty"`
 	Favorite      bool             `json:"favorite,omitempty"`
 	Details       string           `json:"details,omitempty"`
@@ -26,7 +26,7 @@ type Studio struct {
 	IgnoreAutoTag bool             `json:"ignore_auto_tag,omitempty"`
 	Organized     bool             `json:"organized,omitempty"`
 
-	CustomFields map[string]interface{} `json:"custom_fields,omitempty"`
+	CustomFields map[string]any `json:"custom_fields,omitempty"`
 
 	// deprecated - for import only
 	URL string `json:"url,omitempty"`

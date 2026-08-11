@@ -67,7 +67,7 @@ func combineImages(images []image.Image) image.Image {
 	canvasWidth := width * columns
 	canvasHeight := height * rows
 	montage := imaging.New(canvasWidth, canvasHeight, color.NRGBA{})
-	for index := 0; index < len(images); index++ {
+	for index := range images {
 		x := width * (index % columns)
 		y := height * int(math.Floor(float64(index)/float64(rows)))
 		img := images[index]
@@ -87,7 +87,7 @@ func generateSprite(encoder *ffmpeg.FFMpeg, videoFile *models.VideoFile) (image.
 	var images []image.Image
 	slowSeek := false
 
-	for i := 0; i < chunkCount; i++ {
+	for i := range chunkCount {
 		time := offset + (float64(i) * stepSize)
 
 		img, err := generateSpriteScreenshot(encoder, videoFile.Path, time, slowSeek)

@@ -16,7 +16,7 @@ type Date struct {
 }
 
 // Scan implements the Scanner interface.
-func (d *Date) Scan(value interface{}) error {
+func (d *Date) Scan(value any) error {
 	d.Date = value.(time.Time)
 	return nil
 }
@@ -33,7 +33,7 @@ type NullDate struct {
 }
 
 // Scan implements the Scanner interface.
-func (d *NullDate) Scan(value interface{}) error {
+func (d *NullDate) Scan(value any) error {
 	var ok bool
 	d.Date, ok = value.(time.Time)
 	if !ok {

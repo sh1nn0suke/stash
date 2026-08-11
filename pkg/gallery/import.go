@@ -30,7 +30,7 @@ type Importer struct {
 
 	ID           int
 	gallery      models.Gallery
-	customFields map[string]interface{}
+	customFields map[string]any
 }
 
 func (i *Importer) PreImport(ctx context.Context) error {

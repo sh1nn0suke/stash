@@ -84,7 +84,7 @@ func (g Generator) CombineSpriteImages(images []image.Image) image.Image {
 	canvasWidth := width * gridSize
 	canvasHeight := height * gridSize
 	montage := imaging.New(canvasWidth, canvasHeight, color.NRGBA{})
-	for index := 0; index < len(images); index++ {
+	for index := range images {
 		x := width * (index % gridSize)
 		y := height * int(math.Floor(float64(index)/float64(gridSize)))
 		img := images[index]
@@ -124,7 +124,7 @@ func (g Generator) spriteVTT(spritePath string, stepSize float64, spriteChunks i
 		height := image.Height / gridSize
 
 		vttLines := []string{"WEBVTT", ""}
-		for index := 0; index < spriteChunks; index++ {
+		for index := range spriteChunks {
 			x := width * (index % gridSize)
 			y := height * int(math.Floor(float64(index)/float64(gridSize)))
 			startTime := utils.GetVTTTime(float64(index) * stepSize)

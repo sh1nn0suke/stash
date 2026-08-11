@@ -376,7 +376,7 @@ func (t *ExportTask) ExportScenes(ctx context.Context, workers int) {
 	logger.Info("[scenes] exporting")
 	startTime := time.Now()
 
-	for w := 0; w < workers; w++ { // create export Scene workers
+	for range workers { // create export Scene workers
 		scenesWg.Add(1)
 		go t.exportScene(ctx, &scenesWg, jobCh)
 	}
@@ -641,7 +641,7 @@ func (t *ExportTask) ExportImages(ctx context.Context, workers int) {
 	logger.Info("[images] exporting")
 	startTime := time.Now()
 
-	for w := 0; w < workers; w++ { // create export Image workers
+	for range workers { // create export Image workers
 		imagesWg.Add(1)
 		go t.exportImage(ctx, &imagesWg, jobCh)
 	}
@@ -773,7 +773,7 @@ func (t *ExportTask) ExportGalleries(ctx context.Context, workers int) {
 	logger.Info("[galleries] exporting")
 	startTime := time.Now()
 
-	for w := 0; w < workers; w++ { // create export Scene workers
+	for range workers { // create export Scene workers
 		galleriesWg.Add(1)
 		go t.exportGallery(ctx, &galleriesWg, jobCh)
 	}
@@ -925,7 +925,7 @@ func (t *ExportTask) ExportPerformers(ctx context.Context, workers int) {
 	logger.Info("[performers] exporting")
 	startTime := time.Now()
 
-	for w := 0; w < workers; w++ { // create export Performer workers
+	for range workers { // create export Performer workers
 		performersWg.Add(1)
 		go t.exportPerformer(ctx, &performersWg, jobCh)
 	}
@@ -999,7 +999,7 @@ func (t *ExportTask) ExportStudios(ctx context.Context, workers int) {
 
 	jobCh := make(chan *models.Studio, workers*2) // make a buffered channel to feed workers
 
-	for w := 0; w < workers; w++ { // create export Studio workers
+	for range workers { // create export Studio workers
 		studiosWg.Add(1)
 		go t.exportStudio(ctx, &studiosWg, jobCh)
 	}
@@ -1079,7 +1079,7 @@ func (t *ExportTask) ExportTags(ctx context.Context, workers int) {
 	for {
 		jobCh := make(chan *models.Tag, workers*2) // make a buffered channel to feed workers
 
-		for w := 0; w < workers; w++ { // create export Tag workers
+		for range workers { // create export Tag workers
 			tagsWg.Add(1)
 			go t.exportTag(ctx, &tagsWg, jobCh)
 		}
@@ -1163,7 +1163,7 @@ func (t *ExportTask) ExportGroups(ctx context.Context, workers int) {
 
 	jobCh := make(chan *models.Group, workers*2) // make a buffered channel to feed workers
 
-	for w := 0; w < workers; w++ { // create export Studio workers
+	for range workers { // create export Studio workers
 		groupsWg.Add(1)
 		go t.exportGroup(ctx, &groupsWg, jobCh)
 	}
@@ -1269,7 +1269,7 @@ func (t *ExportTask) ExportSavedFilters(ctx context.Context, workers int) {
 
 	jobCh := make(chan *models.SavedFilter, workers*2) // make a buffered channel to feed workers
 
-	for w := 0; w < workers; w++ { // create export Saved Filter workers
+	for range workers { // create export Saved Filter workers
 		wg.Add(1)
 		go t.exportSavedFilter(ctx, &wg, jobCh)
 	}

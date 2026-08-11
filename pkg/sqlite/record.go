@@ -11,7 +11,7 @@ type updateRecord struct {
 	exp.Record
 }
 
-func (r *updateRecord) set(destField string, v interface{}) {
+func (r *updateRecord) set(destField string, v any) {
 	r.Record[destField] = v
 }
 

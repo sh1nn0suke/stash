@@ -64,7 +64,7 @@ func (t *jsPluginTask) initVM() error {
 		ServerConnection common.StashServerConnection
 
 		// Arguments to the plugin operation.
-		Args map[string]interface{}
+		Args map[string]any
 	}
 
 	input := pluginInput{

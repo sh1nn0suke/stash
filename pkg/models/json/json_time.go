@@ -31,7 +31,7 @@ func (jt *JSONTime) MarshalJSON() ([]byte, error) {
 	if jt.Time.IsZero() {
 		return []byte("null"), nil
 	}
-	return []byte(fmt.Sprintf("\"%s\"", jt.Time.Format(time.RFC3339))), nil
+	return fmt.Appendf(nil, "\"%s\"", jt.Time.Format(time.RFC3339)), nil
 }
 
 func (jt JSONTime) GetTime() time.Time {

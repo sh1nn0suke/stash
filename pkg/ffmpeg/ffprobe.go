@@ -120,10 +120,7 @@ type VideoFile struct {
 // Returns -2 for the dimension that will scale to maintain aspect ratio.
 func (v *VideoFile) TranscodeScale(maxSize int) (int, int) {
 	// get the smaller dimension of the video file
-	videoSize := v.Height
-	if v.Width < videoSize {
-		videoSize = v.Width
-	}
+	videoSize := min(v.Width, v.Height)
 
 	// if our streaming resolution is larger than the video dimension
 	// or we are streaming the original resolution, then just set the

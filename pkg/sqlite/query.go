@@ -20,16 +20,16 @@ type queryBuilder struct {
 	withClauses   []string
 	recursiveWith bool
 
-	withArgs   []interface{}
-	joinArgs   []interface{}
-	whereArgs  []interface{}
-	havingArgs []interface{}
+	withArgs   []any
+	joinArgs   []any
+	whereArgs  []any
+	havingArgs []any
 
 	sortAndPagination string
 }
 
-func (qb queryBuilder) allArgs() []interface{} {
-	var args []interface{}
+func (qb queryBuilder) allArgs() []any {
+	var args []any
 	args = append(args, qb.withArgs...)
 	args = append(args, qb.joinArgs...)
 	args = append(args, qb.whereArgs...)
@@ -121,11 +121,11 @@ func (qb *queryBuilder) addWith(recursive bool, clauses ...string) {
 	qb.recursiveWith = qb.recursiveWith || recursive
 }
 
-func (qb *queryBuilder) addArg(args ...interface{}) {
+func (qb *queryBuilder) addArg(args ...any) {
 	qb.whereArgs = append(qb.whereArgs, args...)
 }
 
-func (qb *queryBuilder) addHavingArg(args ...interface{}) {
+func (qb *queryBuilder) addHavingArg(args ...any) {
 	qb.havingArgs = append(qb.havingArgs, args...)
 }
 

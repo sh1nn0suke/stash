@@ -2,6 +2,7 @@ package tag
 
 import (
 	"context"
+	"slices"
 	"testing"
 
 	"github.com/stashapp/stash/pkg/models"
@@ -28,10 +29,8 @@ func (m tagNameFinderMock) FindByNames(ctx context.Context, names []string, noca
 
 func (m tagNameFinderMock) FindByAlias(ctx context.Context, alias string, nocase bool) (*models.Tag, error) {
 	for _, n := range m.existingTags {
-		for _, a := range n.Aliases.List() {
-			if a == alias {
-				return n, nil
-			}
+		if slices.Contains(n.Aliases.List(), alias) {
+			return n, nil
 		}
 	}
 

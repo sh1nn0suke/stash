@@ -63,28 +63,28 @@ func (m *schema58Migrator) fromSnakeCase(v string) string {
 }
 
 // fromSnakeCaseMap recursively converts a map using snake_case keys to camelCase keys
-func (m *schema58Migrator) fromSnakeCaseMap(mm map[string]interface{}) map[string]interface{} {
-	return m.fromSnakeCaseValue(mm).(map[string]interface{})
+func (m *schema58Migrator) fromSnakeCaseMap(mm map[string]any) map[string]any {
+	return m.fromSnakeCaseValue(mm).(map[string]any)
 }
 
-func (m *schema58Migrator) fromSnakeCaseValue(val interface{}) interface{} {
+func (m *schema58Migrator) fromSnakeCaseValue(val any) any {
 	switch v := val.(type) {
-	case map[interface{}]interface{}:
+	case map[any]any:
 		ret := cast.ToStringMap(v)
 		for k, vv := range ret {
 			adjKey := m.fromSnakeCase(k)
 			ret[adjKey] = m.fromSnakeCaseValue(vv)
 		}
 		return ret
-	case map[string]interface{}:
-		ret := make(map[string]interface{})
+	case map[string]any:
+		ret := make(map[string]any)
 		for k, vv := range v {
 			adjKey := m.fromSnakeCase(k)
 			ret[adjKey] = m.fromSnakeCaseValue(vv)
 		}
 		return ret
-	case []interface{}:
-		ret := make([]interface{}, len(v))
+	case []any:
+		ret := make([]any, len(v))
 		for i, vv := range v {
 			ret[i] = m.fromSnakeCaseValue(vv)
 		}
@@ -95,7 +95,7 @@ func (m *schema58Migrator) fromSnakeCaseValue(val interface{}) interface{} {
 }
 
 // renameKey renames a fully qualified key name in a map
-func (m *schema58Migrator) renameKey(mm map[string]interface{}, from, to string) {
+func (m *schema58Migrator) renameKey(mm map[string]any, from, to string) {
 	nm := utils.NestedMap(mm)
 	v, found := nm.Get(from)
 	if !found {
@@ -106,14 +106,14 @@ func (m *schema58Migrator) renameKey(mm map[string]interface{}, from, to string)
 	nm.Set(to, v)
 }
 
-func (m *schema58Migrator) renameFrontPageContentKeys(ui map[string]interface{}) {
-	frontPageContent, found := ui["frontPageContent"].([]interface{})
+func (m *schema58Migrator) renameFrontPageContentKeys(ui map[string]any) {
+	frontPageContent, found := ui["frontPageContent"].([]any)
 	if !found {
 		return
 	}
 
 	for _, v := range frontPageContent {
-		vm := v.(map[string]interface{})
+		vm := v.(map[string]any)
 		m.renameKey(vm, "savedfilterid", "savedFilterId")
 		m.renameKey(vm, "sortby", "sortBy")
 	}
@@ -159,7 +159,7 @@ func (m *schema58Migrator) migrateConfig() error {
 	}
 
 	plugins := c.GetAllPluginConfiguration()
-	newPlugins := make(map[string]interface{})
+	newPlugins := make(map[string]any)
 	for key, value := range plugins {
 		key = m.fromSnakeCase(key)
 		newPlugins[key] = m.fromSnakeCaseMap(value)

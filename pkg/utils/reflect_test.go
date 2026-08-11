@@ -17,7 +17,7 @@ func TestNotNilFields(t *testing.T) {
 	}
 
 	type args struct {
-		subject interface{}
+		subject any
 		tag     string
 	}
 	tests := []struct {

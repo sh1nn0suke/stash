@@ -1,6 +1,6 @@
 package plugin
 
-type OperationInput map[string]interface{}
+type OperationInput map[string]any
 
 type PluginArgInput struct {
 	Key   string            `json:"key"`

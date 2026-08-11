@@ -23,10 +23,7 @@ func webm(buf []byte) bool {
 }
 
 func containsMatroskaSignature(buf, subType []byte) bool {
-	limit := 4096
-	if len(buf) < limit {
-		limit = len(buf)
-	}
+	limit := min(len(buf), 4096)
 
 	index := bytes.Index(buf[:limit], subType)
 	if index < 3 {

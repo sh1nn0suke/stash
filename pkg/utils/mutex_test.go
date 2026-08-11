@@ -29,11 +29,11 @@ func TestMutexManager(t *testing.T) {
 	const workers = 8
 	const loops = 300
 	var wg sync.WaitGroup
-	for k := 0; k < workers; k++ {
+	for k := range workers {
 		wg.Add(1)
 		go func(wk int) {
 			defer wg.Done()
-			for l := 0; l < loops; l++ {
+			for l := range loops {
 				func(l int) {
 					c := make(chan struct{})
 					defer close(c)

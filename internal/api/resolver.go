@@ -29,7 +29,7 @@ var (
 )
 
 type hookExecutor interface {
-	ExecutePostHooks(ctx context.Context, id int, hookType hook.TriggerEnum, input interface{}, inputFields []string)
+	ExecutePostHooks(ctx context.Context, id int, hookType hook.TriggerEnum, input any, inputFields []string)
 }
 
 type Resolver struct {
@@ -328,7 +328,7 @@ func (r *queryResolver) Latestversion(ctx context.Context) (*LatestVersion, erro
 	}, nil
 }
 
-func (r *mutationResolver) ExecSQL(ctx context.Context, sql string, args []interface{}) (*SQLExecResult, error) {
+func (r *mutationResolver) ExecSQL(ctx context.Context, sql string, args []any) (*SQLExecResult, error) {
 	var rowsAffected *int64
 	var lastInsertID *int64
 
@@ -347,9 +347,9 @@ func (r *mutationResolver) ExecSQL(ctx context.Context, sql string, args []inter
 	}, nil
 }
 
-func (r *mutationResolver) QuerySQL(ctx context.Context, sql string, args []interface{}) (*SQLQueryResult, error) {
+func (r *mutationResolver) QuerySQL(ctx context.Context, sql string, args []any) (*SQLQueryResult, error) {
 	var cols []string
-	var rows [][]interface{}
+	var rows [][]any
 
 	db := manager.GetInstance().Database
 	if err := r.withTxn(ctx, func(ctx context.Context) error {

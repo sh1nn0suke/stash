@@ -74,7 +74,7 @@ type StudioCreateInput struct {
 	IgnoreAutoTag *bool          `json:"ignore_auto_tag"`
 	Organized     *bool          `json:"organized"`
 
-	CustomFields map[string]interface{} `json:"custom_fields"`
+	CustomFields map[string]any `json:"custom_fields"`
 }
 
 type StudioUpdateInput struct {

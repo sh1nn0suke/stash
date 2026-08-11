@@ -36,7 +36,7 @@ func (e HashAlgorithm) String() string {
 	return string(e)
 }
 
-func (e *HashAlgorithm) UnmarshalGQL(v interface{}) error {
+func (e *HashAlgorithm) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
@@ -60,7 +60,7 @@ func (i FileID) String() string {
 	return strconv.Itoa(int(i))
 }
 
-func (i *FileID) UnmarshalGQL(v interface{}) (err error) {
+func (i *FileID) UnmarshalGQL(v any) (err error) {
 	switch v := v.(type) {
 	case string:
 		var id int

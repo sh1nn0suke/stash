@@ -117,7 +117,7 @@ func InitializeEmpty() *Config {
 func (i *Config) loadFromCommandLine() {
 	v := i.overrides
 
-	if err := v.Load(posflag.ProviderWithFlag(pflag.CommandLine, ".", v, func(f *pflag.Flag) (string, interface{}) {
+	if err := v.Load(posflag.ProviderWithFlag(pflag.CommandLine, ".", v, func(f *pflag.Flag) (string, any) {
 		// ignore flags that have not been changed
 		if !f.Changed {
 			return "", nil
@@ -132,7 +132,7 @@ func (i *Config) loadFromCommandLine() {
 func (i *Config) loadFromEnv() {
 	v := i.overrides
 
-	if err := v.Load(env.ProviderWithValue("STASH_", ".", func(key, value string) (string, interface{}) {
+	if err := v.Load(env.ProviderWithValue("STASH_", ".", func(key, value string) (string, any) {
 		key = strings.ToLower(strings.TrimPrefix(key, "STASH_"))
 		if newKey, ok := envBinds[key]; ok {
 			return newKey, value

@@ -69,12 +69,12 @@ func (l PluginLogLevel) prefix() string {
 
 // Log prints the provided message to os.Stderr in a format that provides the correct LogLevel for stash.
 // The message is formatted in the same way as fmt.Println.
-func (l PluginLogLevel) Log(args ...interface{}) {
+func (l PluginLogLevel) Log(args ...any) {
 	if l.char == 0 {
 		return
 	}
 
-	argsToUse := []interface{}{
+	argsToUse := []any{
 		l.prefix(),
 	}
 	argsToUse = append(argsToUse, args...)
@@ -83,7 +83,7 @@ func (l PluginLogLevel) Log(args ...interface{}) {
 
 // Logf prints the provided message to os.Stderr in a format that provides the correct LogLevel for stash.
 // The message is formatted in the same way as fmt.Printf.
-func (l PluginLogLevel) Logf(format string, args ...interface{}) {
+func (l PluginLogLevel) Logf(format string, args ...any) {
 	if l.char == 0 {
 		return
 	}

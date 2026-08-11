@@ -258,7 +258,7 @@ type scriptScraper struct {
 	globalConfig GlobalConfig
 }
 
-func (s *scriptScraper) runScraperScript(ctx context.Context, command []string, inString string, out interface{}) error {
+func (s *scriptScraper) runScraperScript(ctx context.Context, command []string, inString string, out any) error {
 	var cmd *exec.Cmd
 	if python.IsPythonCommand(command[0]) {
 		pythonPath := s.globalConfig.GetPythonPath()

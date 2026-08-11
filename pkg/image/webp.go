@@ -41,6 +41,6 @@ func isWebPAnimated(buf []byte) bool {
 
 // https://developers.google.com/speed/webp/docs/riff_container#animation
 func containsAnimSignature(buf []byte) bool {
-	index := bytes.Index(buf, []byte("ANIM"))
-	return index != -1
+	found := bytes.Contains(buf, []byte("ANIM"))
+	return found
 }

@@ -126,7 +126,7 @@ func (s *stashScraper) scrapeByPerformerFragment(ctx context.Context, scrapedPer
 	performerID := *scrapedPerformer.URL
 
 	// get the id from the URL field
-	vars := map[string]interface{}{
+	vars := map[string]any{
 		"f": graphql.ID(performerID),
 	}
 
@@ -178,7 +178,7 @@ func (s *stashScraper) scrapeBySceneFragment(ctx context.Context, scrapedScene m
 	sceneID := scrapedScene.URLs[0]
 
 	// get the id from the URL field
-	vars := map[string]interface{}{
+	vars := map[string]any{
 		"f": graphql.ID(sceneID),
 	}
 
@@ -246,7 +246,7 @@ func (s *stashScraper) scrapeByName(ctx context.Context, name string, ty ScrapeC
 	page := 1
 	perPage := 10
 
-	vars := map[string]interface{}{
+	vars := map[string]any{
 		"f": models.FindFilterType{
 			Q:       &name,
 			Page:    &page,
@@ -358,7 +358,7 @@ func (s *stashScraper) scrapeSceneByScene(ctx context.Context, scene *models.Sce
 		Oshash:   &oshash,
 	}
 
-	vars := map[string]interface{}{
+	vars := map[string]any{
 		"c": input,
 	}
 
@@ -413,7 +413,7 @@ func (s *stashScraper) scrapeGalleryByGallery(ctx context.Context, gallery *mode
 		Checksum: &checksum,
 	}
 
-	vars := map[string]interface{}{
+	vars := map[string]any{
 		"c": &input,
 	}
 

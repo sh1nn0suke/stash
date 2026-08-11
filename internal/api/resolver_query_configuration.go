@@ -246,7 +246,7 @@ func makeConfigDefaultsResult() *ConfigDefaultSettingsResult {
 	}
 }
 
-func makeConfigUIResult() map[string]interface{} {
+func makeConfigUIResult() map[string]any {
 	return config.GetInstance().GetUIConfiguration()
 }
 

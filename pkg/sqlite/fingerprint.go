@@ -16,7 +16,7 @@ const (
 
 type fingerprintQueryRow struct {
 	Type        null.String `db:"fingerprint_type"`
-	Fingerprint interface{} `db:"fingerprint"`
+	Fingerprint any         `db:"fingerprint"`
 }
 
 func (r fingerprintQueryRow) valid() bool {

@@ -23,7 +23,7 @@ func sumBytes(buf []byte) (uint64, error) {
 
 	sz := len(buf) / 8
 	var sum uint64
-	for j := 0; j < sz; j++ {
+	for j := range sz {
 		sum += binary.LittleEndian.Uint64(buf[8*j : 8*(j+1)])
 	}
 

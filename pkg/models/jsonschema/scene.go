@@ -17,12 +17,12 @@ type SceneMarker struct {
 	EndSeconds string        `json:"end_seconds,omitempty"`
 	PrimaryTag string        `json:"primary_tag,omitempty"`
 	Tags       []string      `json:"tags,omitempty"`
-	CreatedAt  json.JSONTime `json:"created_at,omitempty"`
-	UpdatedAt  json.JSONTime `json:"updated_at,omitempty"`
+	CreatedAt  json.JSONTime `json:"created_at"`
+	UpdatedAt  json.JSONTime `json:"updated_at"`
 }
 
 type SceneFile struct {
-	ModTime    json.JSONTime `json:"mod_time,omitempty"`
+	ModTime    json.JSONTime `json:"mod_time"`
 	Size       string        `json:"size"`
 	Duration   string        `json:"duration"`
 	VideoCodec string        `json:"video_codec"`
@@ -64,11 +64,11 @@ type Scene struct {
 	Markers    []SceneMarker `json:"markers,omitempty"`
 	Files      []string      `json:"files,omitempty"`
 	Cover      string        `json:"cover,omitempty"`
-	CreatedAt  json.JSONTime `json:"created_at,omitempty"`
-	UpdatedAt  json.JSONTime `json:"updated_at,omitempty"`
+	CreatedAt  json.JSONTime `json:"created_at"`
+	UpdatedAt  json.JSONTime `json:"updated_at"`
 
 	// deprecated - for import only
-	LastPlayedAt json.JSONTime `json:"last_played_at,omitempty"`
+	LastPlayedAt json.JSONTime `json:"last_played_at"`
 
 	ResumeTime float64 `json:"resume_time,omitempty"`
 
@@ -81,7 +81,7 @@ type Scene struct {
 	PlayDuration float64          `json:"play_duration,omitempty"`
 	StashIDs     []models.StashID `json:"stash_ids,omitempty"`
 
-	CustomFields map[string]interface{} `json:"custom_fields,omitempty"`
+	CustomFields map[string]any `json:"custom_fields,omitempty"`
 }
 
 func (s Scene) Filename(id int, basename string, hash string) string {

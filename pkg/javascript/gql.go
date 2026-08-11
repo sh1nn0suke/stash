@@ -35,11 +35,11 @@ type GQL struct {
 	GQLHandler http.Handler
 }
 
-func (g *GQL) gqlRequestFunc(vm *VM) func(query string, variables map[string]interface{}) (goja.Value, error) {
-	return func(query string, variables map[string]interface{}) (goja.Value, error) {
+func (g *GQL) gqlRequestFunc(vm *VM) func(query string, variables map[string]any) (goja.Value, error) {
+	return func(query string, variables map[string]any) (goja.Value, error) {
 		in := struct {
-			Query     string                 `json:"query"`
-			Variables map[string]interface{} `json:"variables,omitempty"`
+			Query     string         `json:"query"`
+			Variables map[string]any `json:"variables,omitempty"`
 		}{
 			Query:     query,
 			Variables: variables,
@@ -73,7 +73,7 @@ func (g *GQL) gqlRequestFunc(vm *VM) func(query string, variables map[string]int
 
 		output := w.r.String()
 		// convert to JSON
-		var obj map[string]interface{}
+		var obj map[string]any
 		if err = json.Unmarshal([]byte(output), &obj); err != nil {
 			vm.Throw(fmt.Errorf("could not unmarshal object %s: %s", output, err.Error()))
 		}

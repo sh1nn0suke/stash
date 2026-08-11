@@ -178,7 +178,7 @@ func (qb *groupFilterHandler) performersCriterionHandler(performers *models.Mult
 				return
 			}
 
-			var args []interface{}
+			var args []any
 			for _, arg := range performers.Value {
 				args = append(args, arg)
 			}
@@ -249,7 +249,7 @@ var selectGroupOCountSQL = utils.StrFormat(
 		"LEFT JOIN {scenes_o_dates} ON {scenes_o_dates}.{scene_id} = {scenes}.id "+
 		"WHERE s.{group_id} = {group}.id "+
 		")",
-	map[string]interface{}{
+	map[string]any{
 		"group":          groupTable,
 		"group_id":       groupIDColumn,
 		"groups_scenes":  groupsScenesTable,

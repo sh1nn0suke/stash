@@ -30,7 +30,7 @@ func post60(ctx context.Context, db *sqlx.DB) error {
 	return m.migrate(ctx)
 }
 
-func (m *schema60Migrator) decodeJSON(s string, v interface{}) {
+func (m *schema60Migrator) decodeJSON(s string, v any) {
 	if s == "" {
 		return
 	}
@@ -40,7 +40,7 @@ func (m *schema60Migrator) decodeJSON(s string, v interface{}) {
 	}
 }
 
-type schema60DefaultFilters map[string]interface{}
+type schema60DefaultFilters map[string]any
 
 func (m *schema60Migrator) migrate(ctx context.Context) error {
 
@@ -70,15 +70,15 @@ func (m *schema60Migrator) migrate(ctx context.Context) error {
 			}
 
 			// convert the filters to the correct format
-			findFilter := make(map[string]interface{})
-			objectFilter := make(map[string]interface{})
-			uiOptions := make(map[string]interface{})
+			findFilter := make(map[string]any)
+			objectFilter := make(map[string]any)
+			uiOptions := make(map[string]any)
 
 			m.decodeJSON(findFilterStr, &findFilter)
 			m.decodeJSON(objectFilterStr, &objectFilter)
 			m.decodeJSON(uiOptionsStr, &uiOptions)
 
-			o := map[string]interface{}{
+			o := map[string]any{
 				"mode":          mode,
 				"find_filter":   findFilter,
 				"object_filter": objectFilter,
@@ -129,7 +129,7 @@ func (m *schema60Migrator) saveDefaultFilters(defaultFilters schema60DefaultFilt
 
 	uiConfig := config.GetUIConfiguration()
 	if uiConfig == nil {
-		uiConfig = make(map[string]interface{})
+		uiConfig = make(map[string]any)
 	}
 
 	// if the defaultFilters key already exists, don't overwrite them
@@ -142,7 +142,7 @@ func (m *schema60Migrator) saveDefaultFilters(defaultFilters schema60DefaultFilt
 		return fmt.Errorf("backing up config: %w", err)
 	}
 
-	uiConfig["defaultFilters"] = map[string]interface{}(defaultFilters)
+	uiConfig["defaultFilters"] = map[string]any(defaultFilters)
 	config.SetUIConfiguration(uiConfig)
 
 	if err := config.Write(); err != nil {

@@ -9,8 +9,8 @@ type SavedFilter struct {
 	Mode         models.FilterMode      `db:"mode" json:"mode"`
 	Name         string                 `db:"name" json:"name"`
 	FindFilter   *models.FindFilterType `json:"find_filter"`
-	ObjectFilter map[string]interface{} `json:"object_filter"`
-	UIOptions    map[string]interface{} `json:"ui_options"`
+	ObjectFilter map[string]any         `json:"object_filter"`
+	UIOptions    map[string]any         `json:"ui_options"`
 }
 
 func (s SavedFilter) Filename() string {

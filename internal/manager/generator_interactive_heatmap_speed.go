@@ -303,7 +303,7 @@ func (funscript Script) getGradientTable(numSegments int, sceneDurationMilli int
 	lastSegment := segments[0]
 
 	// Fill in gaps in segments
-	for i := 0; i < numSegments; i++ {
+	for i := range numSegments {
 		segmentTS := float64((maxts / int64(numSegments)) * int64(i))
 
 		// Empty segment - fill it with the previous up to backfillThreshold ms
@@ -319,7 +319,7 @@ func (funscript Script) getGradientTable(numSegments int, sceneDurationMilli int
 		}
 	}
 
-	for i := 0; i < numSegments; i++ {
+	for i := range numSegments {
 		gradient[i].Pos = float64(i) / float64(numSegments-1)
 		gradient[i].YRange = segments[i].yRange
 		if segments[i].count > 0 {

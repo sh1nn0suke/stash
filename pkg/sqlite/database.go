@@ -464,7 +464,7 @@ func flushWAL(ctx context.Context, db *sqlx.DB) error {
 	return err
 }
 
-func (db *Database) ExecSQL(ctx context.Context, query string, args []interface{}) (*int64, *int64, error) {
+func (db *Database) ExecSQL(ctx context.Context, query string, args []any) (*int64, *int64, error) {
 	wrapper := dbWrapperType{}
 
 	result, err := wrapper.Exec(ctx, query, args...)
@@ -487,7 +487,7 @@ func (db *Database) ExecSQL(ctx context.Context, query string, args []interface{
 	return rowsAffected, lastInsertId, nil
 }
 
-func (db *Database) QuerySQL(ctx context.Context, query string, args []interface{}) ([]string, [][]interface{}, error) {
+func (db *Database) QuerySQL(ctx context.Context, query string, args []any) ([]string, [][]any, error) {
 	wrapper := dbWrapperType{}
 
 	rows, err := wrapper.QueryxContext(ctx, query, args...)
@@ -501,7 +501,7 @@ func (db *Database) QuerySQL(ctx context.Context, query string, args []interface
 		return nil, nil, err
 	}
 
-	var ret [][]interface{}
+	var ret [][]any
 
 	for rows.Next() {
 		row, err := rows.SliceScan()

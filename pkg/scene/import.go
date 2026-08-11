@@ -36,7 +36,7 @@ type Importer struct {
 
 	ID             int
 	scene          models.Scene
-	customFields   map[string]interface{}
+	customFields   map[string]any
 	coverImageData []byte
 	viewHistory    []time.Time
 	oHistory       []time.Time
@@ -132,7 +132,7 @@ func getHistory(historyJSON []json.JSONTime, count int, last json.JSONTime, crea
 		}
 	} else if count > 0 {
 		createdAt := createdAt.GetTime()
-		for j := 0; j < count; j++ {
+		for j := range count {
 			t := createdAt
 			if j+1 == count && !last.IsZero() {
 				// last one, use last play date

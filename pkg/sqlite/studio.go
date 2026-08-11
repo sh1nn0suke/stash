@@ -645,7 +645,7 @@ var selectStudioLatestSceneSQL = utils.StrFormat(
 		"SELECT {date} FROM {scenes} s "+
 		"WHERE s.{studio_id} = {studios}.id"+
 		")",
-	map[string]interface{}{
+	map[string]any{
 		"scenes":    sceneTable,
 		"studios":   studioTable,
 		"studio_id": studioIDColumn,

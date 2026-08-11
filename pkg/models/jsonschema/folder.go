@@ -16,8 +16,8 @@ type Folder struct {
 
 	Path string `json:"path,omitempty"`
 
-	CreatedAt json.JSONTime `json:"created_at,omitempty"`
-	UpdatedAt json.JSONTime `json:"updated_at,omitempty"`
+	CreatedAt json.JSONTime `json:"created_at"`
+	UpdatedAt json.JSONTime `json:"updated_at"`
 }
 
 func (f *Folder) Filename() string {

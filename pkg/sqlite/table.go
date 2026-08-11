@@ -31,7 +31,7 @@ func (e *NotFoundError) Error() string {
 	return fmt.Sprintf("id %d does not exist in %s", e.ID, e.Table)
 }
 
-func (t *table) insert(ctx context.Context, o interface{}) (sql.Result, error) {
+func (t *table) insert(ctx context.Context, o any) (sql.Result, error) {
 	q := dialect.Insert(t.table).Prepared(true).Rows(o)
 	ret, err := exec(ctx, q)
 	if err != nil {
@@ -41,7 +41,7 @@ func (t *table) insert(ctx context.Context, o interface{}) (sql.Result, error) {
 	return ret, nil
 }
 
-func (t *table) insertID(ctx context.Context, o interface{}) (int, error) {
+func (t *table) insertID(ctx context.Context, o any) (int, error) {
 	result, err := t.insert(ctx, o)
 	if err != nil {
 		return 0, err
@@ -55,7 +55,7 @@ func (t *table) insertID(ctx context.Context, o interface{}) (int, error) {
 	return int(ret), nil
 }
 
-func (t *table) updateByID(ctx context.Context, id interface{}, o interface{}) error {
+func (t *table) updateByID(ctx context.Context, id any, o any) error {
 	q := dialect.Update(t.table).Prepared(true).Set(o).Where(t.byID(id))
 
 	if _, err := exec(ctx, q); err != nil {
@@ -65,19 +65,19 @@ func (t *table) updateByID(ctx context.Context, id interface{}, o interface{}) e
 	return nil
 }
 
-func (t *table) byID(id interface{}) exp.Expression {
+func (t *table) byID(id any) exp.Expression {
 	return t.idColumn.Eq(id)
 }
 
 func (t *table) byIDInts(ids ...int) exp.Expression {
-	ii := make([]interface{}, len(ids))
+	ii := make([]any, len(ids))
 	for i, id := range ids {
 		ii[i] = id
 	}
 	return t.idColumn.In(ii...)
 }
 
-func (t *table) idExists(ctx context.Context, id interface{}) (bool, error) {
+func (t *table) idExists(ctx context.Context, id any) (bool, error) {
 	q := dialect.Select(goqu.COUNT("*")).From(t.table).Where(t.byID(id))
 
 	var count int
@@ -1138,7 +1138,7 @@ func (t *viewHistoryTable) deleteAllDates(ctx context.Context, id int) (int, err
 }
 
 type sqler interface {
-	ToSQL() (sql string, params []interface{}, err error)
+	ToSQL() (sql string, params []any, err error)
 }
 
 func exec(ctx context.Context, stmt sqler) (sql.Result, error) {
@@ -1199,7 +1199,7 @@ func queryFunc(ctx context.Context, query *goqu.SelectDataset, single bool, f fu
 	return nil
 }
 
-func querySimple(ctx context.Context, query *goqu.SelectDataset, out interface{}) error {
+func querySimple(ctx context.Context, query *goqu.SelectDataset, out any) error {
 	q, args, err := query.ToSQL()
 	if err != nil {
 		return err
@@ -1224,7 +1224,7 @@ func querySimple(ctx context.Context, query *goqu.SelectDataset, out interface{}
 	return nil
 }
 
-func querySelect(ctx context.Context, query string, args []interface{}, dest interface{}) error {
+func querySelect(ctx context.Context, query string, args []any, dest any) error {
 	if err := dbWrapper.Select(ctx, dest, query, args...); err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return fmt.Errorf("running query: %s [%v]: %w", query, args, err)
 	}

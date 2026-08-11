@@ -30,7 +30,7 @@ type savedFilterRow struct {
 	UIOptions    string            `db:"ui_options"`
 }
 
-func encodeJSONOrEmpty(v interface{}) string {
+func encodeJSONOrEmpty(v any) string {
 	if v == nil {
 		return ""
 	}
@@ -43,7 +43,7 @@ func encodeJSONOrEmpty(v interface{}) string {
 	return string(encoded)
 }
 
-func decodeJSON(s string, v interface{}) {
+func decodeJSON(s string, v any) {
 	if s == "" {
 		return
 	}
@@ -77,11 +77,11 @@ func (r *savedFilterRow) resolve() *models.SavedFilter {
 		decodeJSON(r.FindFilter, &ret.FindFilter)
 	}
 	if r.ObjectFilter != "" {
-		ret.ObjectFilter = make(map[string]interface{})
+		ret.ObjectFilter = make(map[string]any)
 		decodeJSON(r.ObjectFilter, &ret.ObjectFilter)
 	}
 	if r.UIOptions != "" {
-		ret.UIOptions = make(map[string]interface{})
+		ret.UIOptions = make(map[string]any)
 		decodeJSON(r.UIOptions, &ret.UIOptions)
 	}
 

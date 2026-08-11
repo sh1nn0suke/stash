@@ -42,7 +42,7 @@ func (e ImageLightboxDisplayMode) String() string {
 	return string(e)
 }
 
-func (e *ImageLightboxDisplayMode) UnmarshalGQL(v interface{}) error {
+func (e *ImageLightboxDisplayMode) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
@@ -83,7 +83,7 @@ func (e ImageLightboxScrollMode) String() string {
 	return string(e)
 }
 
-func (e *ImageLightboxScrollMode) UnmarshalGQL(v interface{}) error {
+func (e *ImageLightboxScrollMode) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")

@@ -37,7 +37,7 @@ func NewGroup() Group {
 type CreateGroupInput struct {
 	*Group
 
-	CustomFields   map[string]interface{} `json:"custom_fields"`
+	CustomFields   map[string]any `json:"custom_fields"`
 	FrontImageData []byte
 	BackImageData  []byte
 }

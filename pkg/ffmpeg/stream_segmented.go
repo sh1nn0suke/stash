@@ -555,10 +555,7 @@ func serveDASHManifest(sm *StreamManager, w http.ResponseWriter, r *http.Request
 		urlQuery.Set(resolutionParamKey, resolution)
 	}
 	if maxTranscodeSize != 0 {
-		videoSize := videoHeight
-		if videoWidth < videoSize {
-			videoSize = videoWidth
-		}
+		videoSize := min(videoWidth, videoHeight)
 
 		if maxTranscodeSize < videoSize {
 			scaleFactor := float64(maxTranscodeSize) / float64(videoSize)

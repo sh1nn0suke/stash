@@ -13,8 +13,8 @@ import (
 	"github.com/Yamashou/gqlgenc/graphqljson"
 )
 
-func (c *Client) submitDraft(ctx context.Context, query string, input interface{}, image io.Reader, ret interface{}) error {
-	vars := map[string]interface{}{
+func (c *Client) submitDraft(ctx context.Context, query string, input any, image io.Reader, ret any) error {
+	vars := map[string]any{
 		"input": input,
 	}
 

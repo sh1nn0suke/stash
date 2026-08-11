@@ -271,12 +271,12 @@ func (qb *SceneMarkerStore) FindBySceneID(ctx context.Context, sceneID int) ([]*
 		GROUP BY scene_markers.id
 		ORDER BY scene_markers.seconds ASC
 	`
-	args := []interface{}{sceneID}
+	args := []any{sceneID}
 	return qb.querySceneMarkers(ctx, query, args)
 }
 
 func (qb *SceneMarkerStore) CountByTagID(ctx context.Context, tagID int) (int, error) {
-	args := []interface{}{tagID, tagID}
+	args := []any{tagID, tagID}
 	return sceneMarkerRepository.runCountQuery(ctx, sceneMarkerRepository.buildCountQuery(countSceneMarkersForTagQuery), args)
 }
 
@@ -291,7 +291,7 @@ func (qb *SceneMarkerStore) GetMarkerStrings(ctx context.Context, q *string, sor
 	} else {
 		query += " ORDER BY title ASC"
 	}
-	var args []interface{}
+	var args []any
 	return qb.queryMarkerStringsResultType(ctx, query, args)
 }
 
@@ -408,7 +408,7 @@ func (qb *SceneMarkerStore) setSceneMarkerSort(query *queryBuilder, findFilter *
 	return nil
 }
 
-func (qb *SceneMarkerStore) querySceneMarkers(ctx context.Context, query string, args []interface{}) ([]*models.SceneMarker, error) {
+func (qb *SceneMarkerStore) querySceneMarkers(ctx context.Context, query string, args []any) ([]*models.SceneMarker, error) {
 	const single = false
 	var ret []*models.SceneMarker
 	if err := sceneMarkerRepository.queryFunc(ctx, query, args, single, func(r *sqlx.Rows) error {
@@ -428,7 +428,7 @@ func (qb *SceneMarkerStore) querySceneMarkers(ctx context.Context, query string,
 	return ret, nil
 }
 
-func (qb *SceneMarkerStore) queryMarkerStringsResultType(ctx context.Context, query string, args []interface{}) ([]*models.MarkerStringsResultType, error) {
+func (qb *SceneMarkerStore) queryMarkerStringsResultType(ctx context.Context, query string, args []any) ([]*models.MarkerStringsResultType, error) {
 	rows, err := dbWrapper.Queryx(ctx, query, args...)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return nil, err

@@ -14,17 +14,17 @@ import (
 
 const updateInputField = "input"
 
-func getArgumentMap(ctx context.Context) map[string]interface{} {
+func getArgumentMap(ctx context.Context) map[string]any {
 	rctx := graphql.GetFieldContext(ctx)
 	reqCtx := graphql.GetOperationContext(ctx)
 	return rctx.Field.ArgumentMap(reqCtx.Variables)
 }
 
-func getUpdateInputMap(ctx context.Context) map[string]interface{} {
+func getUpdateInputMap(ctx context.Context) map[string]any {
 	return getNamedUpdateInputMap(ctx, updateInputField)
 }
 
-func getNamedUpdateInputMap(ctx context.Context, field string) map[string]interface{} {
+func getNamedUpdateInputMap(ctx context.Context, field string) map[string]any {
 	args := getArgumentMap(ctx)
 
 	// field can be qualified
@@ -39,7 +39,7 @@ func getNamedUpdateInputMap(ctx context.Context, field string) map[string]interf
 			break
 		}
 
-		currArgs, _ = v.(map[string]interface{})
+		currArgs, _ = v.(map[string]any)
 		if currArgs == nil {
 			break
 		}
@@ -49,19 +49,19 @@ func getNamedUpdateInputMap(ctx context.Context, field string) map[string]interf
 		return currArgs
 	}
 
-	return make(map[string]interface{})
+	return make(map[string]any)
 }
 
-func getUpdateInputMaps(ctx context.Context) []map[string]interface{} {
+func getUpdateInputMaps(ctx context.Context) []map[string]any {
 	args := getArgumentMap(ctx)
 
 	input := args[updateInputField]
-	var ret []map[string]interface{}
+	var ret []map[string]any
 	if input != nil {
 		// convert []interface{} into []map[string]interface{}
-		iSlice, _ := input.([]interface{})
+		iSlice, _ := input.([]any)
 		for _, i := range iSlice {
-			m, _ := i.(map[string]interface{})
+			m, _ := i.(map[string]any)
 			if m != nil {
 				ret = append(ret, m)
 			}
@@ -72,7 +72,7 @@ func getUpdateInputMaps(ctx context.Context) []map[string]interface{} {
 }
 
 type changesetTranslator struct {
-	inputMap map[string]interface{}
+	inputMap map[string]any
 }
 
 func (t changesetTranslator) hasField(field string) bool {

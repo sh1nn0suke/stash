@@ -19,7 +19,7 @@ func toPluginArgs(args []*plugin.PluginArgInput) plugin.OperationInput {
 	return ret
 }
 
-func toPluginArgValue(arg *plugin.PluginValueInput) interface{} {
+func toPluginArgValue(arg *plugin.PluginValueInput) any {
 	if arg == nil {
 		return nil
 	}
@@ -36,7 +36,7 @@ func toPluginArgValue(arg *plugin.PluginValueInput) interface{} {
 	case arg.O != nil:
 		return toPluginArgs(arg.O)
 	case arg.A != nil:
-		var ret []interface{}
+		var ret []any
 		for _, v := range arg.A {
 			ret = append(ret, toPluginArgValue(v))
 		}
@@ -52,7 +52,7 @@ func (r *mutationResolver) RunPluginTask(
 	taskName *string,
 	description *string,
 	args []*plugin.PluginArgInput,
-	argsMap map[string]interface{},
+	argsMap map[string]any,
 ) (string, error) {
 	if argsMap == nil {
 		// convert args to map
@@ -68,10 +68,10 @@ func (r *mutationResolver) RunPluginTask(
 func (r *mutationResolver) RunPluginOperation(
 	ctx context.Context,
 	pluginID string,
-	args map[string]interface{},
-) (interface{}, error) {
+	args map[string]any,
+) (any, error) {
 	if args == nil {
-		args = make(map[string]interface{})
+		args = make(map[string]any)
 	}
 
 	m := manager.GetInstance()

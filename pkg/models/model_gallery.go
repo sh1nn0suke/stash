@@ -50,7 +50,7 @@ type CreateGalleryInput struct {
 	*Gallery
 
 	FileIDs      []FileID
-	CustomFields map[string]interface{} `json:"custom_fields"`
+	CustomFields map[string]any `json:"custom_fields"`
 }
 
 type UpdateGalleryInput struct {

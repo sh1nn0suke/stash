@@ -87,15 +87,13 @@ func (s *DownloadStore) Serve(hash string, w http.ResponseWriter, r *http.Reques
 func (s *DownloadStore) waitAndRemoveFile(hash string, w *http.ResponseWriter, r *http.Request) {
 	f := s.m[hash]
 	notify := r.Context().Done()
-	f.wg.Add(1)
 
-	go func() {
+	f.wg.Go(func() {
 		<-notify
 		s.mutex.Lock()
 		defer s.mutex.Unlock()
 
-		f.wg.Done()
-	}()
+	})
 
 	go f.once.Do(func() {
 		// leave it up for 30 seconds after the first request to allow for multiple requests

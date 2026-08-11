@@ -14,7 +14,7 @@ import (
 type GroupExportReader interface {
 	GetFrontImage(ctx context.Context, groupID int) ([]byte, error)
 	GetBackImage(ctx context.Context, groupID int) ([]byte, error)
-	GetCustomFields(ctx context.Context, groupID int) (map[string]interface{}, error)
+	GetCustomFields(ctx context.Context, groupID int) (map[string]any, error)
 }
 
 // ToJSON converts a Group into its JSON equivalent.

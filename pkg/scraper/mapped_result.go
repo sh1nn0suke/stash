@@ -5,7 +5,7 @@ import (
 	"github.com/stashapp/stash/pkg/models"
 )
 
-type mappedResult map[string]interface{}
+type mappedResult map[string]any
 type mappedResults []mappedResult
 
 func (r mappedResult) string(key string) (string, bool) {

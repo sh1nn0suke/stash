@@ -164,7 +164,7 @@ func (qb *FolderStore) selectDataset() *goqu.SelectDataset {
 	zipFileTable := fileTable.As("zip_files")
 	zipFolderTable := table.As("zip_files_folders")
 
-	cols := []interface{}{
+	cols := []any{
 		table.Col("id"),
 		table.Col("path"),
 		table.Col("zip_file_id"),

@@ -142,7 +142,7 @@ type LatestRelease struct {
 	Url       string
 }
 
-func makeGithubRequest(ctx context.Context, url string, output interface{}) error {
+func makeGithubRequest(ctx context.Context, url string, output any) error {
 	transport := &http.Transport{Proxy: http.ProxyFromEnvironment}
 
 	client := &http.Client{

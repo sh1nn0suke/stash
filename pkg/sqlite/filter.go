@@ -53,7 +53,7 @@ func handleSubFilter[T any](ctx context.Context, handler criterionHandler, f *fi
 
 type sqlClause struct {
 	sql  string
-	args []interface{}
+	args []any
 }
 
 func (c sqlClause) not() sqlClause {
@@ -63,7 +63,7 @@ func (c sqlClause) not() sqlClause {
 	}
 }
 
-func makeClause(sql string, args ...interface{}) sqlClause {
+func makeClause(sql string, args ...any) sqlClause {
 	return sqlClause{
 		sql:  sql,
 		args: args,
@@ -72,7 +72,7 @@ func makeClause(sql string, args ...interface{}) sqlClause {
 
 func joinClauses(joinType string, clauses ...sqlClause) sqlClause {
 	var ret []string
-	var args []interface{}
+	var args []any
 
 	for _, clause := range clauses {
 		ret = append(ret, "("+clause.sql+")")
@@ -102,7 +102,7 @@ type join struct {
 	as       string
 	onClause string
 	joinType joinType
-	args     []interface{}
+	args     []any
 
 	// if true, indicates this is required for sorting only
 	sort bool
@@ -270,7 +270,7 @@ func (f *filterBuilder) not(n *filterBuilder) {
 // The AS is omitted if as is empty.
 // This method does not add a join if it its alias/table name is already
 // present in another existing join.
-func (f *filterBuilder) addJoin(joinType joinType, table, as, onClause string, args ...interface{}) {
+func (f *filterBuilder) addJoin(joinType joinType, table, as, onClause string, args ...any) {
 	newJoin := join{
 		table:    table,
 		as:       as,
@@ -287,7 +287,7 @@ func (f *filterBuilder) addJoin(joinType joinType, table, as, onClause string, a
 // The AS is omitted if as is empty.
 // This method does not add a join if it its alias/table name is already
 // present in another existing join.
-func (f *filterBuilder) addLeftJoin(table, as, onClause string, args ...interface{}) {
+func (f *filterBuilder) addLeftJoin(table, as, onClause string, args ...any) {
 	newJoin := join{
 		table:    table,
 		as:       as,
@@ -304,7 +304,7 @@ func (f *filterBuilder) addLeftJoin(table, as, onClause string, args ...interfac
 // The AS is omitted if as is empty.
 // This method does not add a join if it its alias/table name is already
 // present in another existing join.
-func (f *filterBuilder) addInnerJoin(table, as, onClause string, args ...interface{}) {
+func (f *filterBuilder) addInnerJoin(table, as, onClause string, args ...any) {
 	newJoin := join{
 		table:    table,
 		as:       as,
@@ -326,7 +326,7 @@ func (f *filterBuilder) innerJoinsToLeftJoins() {
 
 // addWhere adds a where clause and arguments to the filter. Where clauses
 // are ANDed together. Does not add anything if the provided string is empty.
-func (f *filterBuilder) addWhere(sql string, args ...interface{}) {
+func (f *filterBuilder) addWhere(sql string, args ...any) {
 	if sql == "" {
 		return
 	}
@@ -335,7 +335,7 @@ func (f *filterBuilder) addWhere(sql string, args ...interface{}) {
 
 // addHaving adds a where clause and arguments to the filter. Having clauses
 // are ANDed together. Does not add anything if the provided string is empty.
-func (f *filterBuilder) addHaving(sql string, args ...interface{}) {
+func (f *filterBuilder) addHaving(sql string, args ...any) {
 	if sql == "" {
 		return
 	}
@@ -343,7 +343,7 @@ func (f *filterBuilder) addHaving(sql string, args ...interface{}) {
 }
 
 // addWith adds a with clause and arguments to the filter
-func (f *filterBuilder) addWith(sql string, args ...interface{}) {
+func (f *filterBuilder) addWith(sql string, args ...any) {
 	if sql == "" {
 		return
 	}
@@ -354,7 +354,7 @@ func (f *filterBuilder) addWith(sql string, args ...interface{}) {
 // addRecursiveWith adds a with clause and arguments to the filter, and sets it to recursive
 //
 //nolint:unused
-func (f *filterBuilder) addRecursiveWith(sql string, args ...interface{}) {
+func (f *filterBuilder) addRecursiveWith(sql string, args ...any) {
 	if sql == "" {
 		return
 	}
@@ -383,7 +383,7 @@ func (f *filterBuilder) getSubFilterClause(clause, subFilterClause string) strin
 // generateWhereClauses generates the SQL where clause for this filter.
 // All where clauses within the filter are ANDed together. This is combined
 // with the sub-filter, which will use the applicable operator (AND/OR/AND NOT).
-func (f *filterBuilder) generateWhereClauses() (clause string, args []interface{}) {
+func (f *filterBuilder) generateWhereClauses() (clause string, args []any) {
 	clause, args = f.andClauses(f.whereClauses)
 
 	if f.subFilter != nil {
@@ -402,7 +402,7 @@ func (f *filterBuilder) generateWhereClauses() (clause string, args []interface{
 // generateHavingClauses generates the SQL having clause for this filter.
 // All having clauses within the filter are ANDed together. This is combined
 // with the sub-filter, which will use the applicable operator (AND/OR/AND NOT).
-func (f *filterBuilder) generateHavingClauses() (string, []interface{}) {
+func (f *filterBuilder) generateHavingClauses() (string, []any) {
 	clause, args := f.andClauses(f.havingClauses)
 
 	if f.subFilter != nil {
@@ -418,9 +418,9 @@ func (f *filterBuilder) generateHavingClauses() (string, []interface{}) {
 	return clause, args
 }
 
-func (f *filterBuilder) generateWithClauses() (string, []interface{}) {
+func (f *filterBuilder) generateWithClauses() (string, []any) {
 	var clauses []string
-	var args []interface{}
+	var args []any
 	for _, w := range f.withClauses {
 		clauses = append(clauses, w.sql)
 		args = append(args, w.args...)
@@ -474,9 +474,9 @@ func (f *filterBuilder) setError(e error) {
 	}
 }
 
-func (f *filterBuilder) andClauses(input []sqlClause) (string, []interface{}) {
+func (f *filterBuilder) andClauses(input []sqlClause) (string, []any) {
 	var clauses []string
-	var args []interface{}
+	var args []any
 	for _, w := range input {
 		clauses = append(clauses, w.sql)
 		args = append(args, w.args...)

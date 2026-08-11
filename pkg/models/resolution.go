@@ -93,7 +93,7 @@ func (e ResolutionEnum) String() string {
 	return string(e)
 }
 
-func (e *ResolutionEnum) UnmarshalGQL(v interface{}) error {
+func (e *ResolutionEnum) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
@@ -160,7 +160,7 @@ func (e StreamingResolutionEnum) String() string {
 	return string(e)
 }
 
-func (e *StreamingResolutionEnum) UnmarshalGQL(v interface{}) error {
+func (e *StreamingResolutionEnum) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")

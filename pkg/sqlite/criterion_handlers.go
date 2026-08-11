@@ -466,7 +466,7 @@ func (m *joinedMultiCriterionHandlerBuilder) handler(c *models.MultiCriterionInp
 				whereClause := ""
 				havingClause := ""
 
-				var args []interface{}
+				var args []any
 				for _, tagID := range criterion.Value {
 					args = append(args, tagID)
 				}
@@ -503,7 +503,7 @@ func (m *joinedMultiCriterionHandlerBuilder) handler(c *models.MultiCriterionInp
 			}
 
 			if len(criterion.Excludes) > 0 {
-				var args []interface{}
+				var args []any
 				for _, tagID := range criterion.Excludes {
 					args = append(args, tagID)
 				}
@@ -553,7 +553,7 @@ func (m *multiCriterionHandlerBuilder) handler(criterion *models.MultiCriterionI
 				return
 			}
 
-			var args []interface{}
+			var args []any
 			for _, tagID := range criterion.Value {
 				args = append(args, tagID)
 			}
@@ -676,7 +676,7 @@ type hierarchicalMultiCriterionHandlerBuilder struct {
 }
 
 func getHierarchicalValues(ctx context.Context, values []string, table, relationsTable, parentFK string, childFK string, depth *int) (string, error) {
-	var args []interface{}
+	var args []any
 
 	if parentFK == "" {
 		parentFK = "parent_id"
@@ -1087,7 +1087,7 @@ func (h *stashIDCriterionHandler) handle(ctx context.Context, f *filterBuilder) 
 	}
 
 	joinClause := fmt.Sprintf("%s.%s = %s", t, stashIDRepo.idColumn, h.parentIDCol)
-	var args []interface{}
+	var args []any
 	if h.c.Endpoint != nil && *h.c.Endpoint != "" {
 		joinClause += fmt.Sprintf(" AND %s.endpoint = ?", t)
 		args = append(args, *h.c.Endpoint)
@@ -1129,7 +1129,7 @@ func (h *stashIDsCriterionHandler) handle(ctx context.Context, f *filterBuilder)
 	}
 
 	joinClause := fmt.Sprintf("%s.%s = %s", t, stashIDRepo.idColumn, h.parentIDCol)
-	var args []interface{}
+	var args []any
 	if h.c.Endpoint != nil && *h.c.Endpoint != "" {
 		joinClause += fmt.Sprintf(" AND %s.endpoint = ?", t)
 		args = append(args, *h.c.Endpoint)

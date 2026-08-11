@@ -25,8 +25,8 @@ const (
 
 var (
 	findFilter   = models.FindFilterType{}
-	objectFilter = make(map[string]interface{})
-	uiOptions    = make(map[string]interface{})
+	objectFilter = make(map[string]any)
+	uiOptions    = make(map[string]any)
 )
 
 func createSavedFilter(id int) models.SavedFilter {

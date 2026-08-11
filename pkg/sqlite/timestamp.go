@@ -13,7 +13,7 @@ type Timestamp struct {
 }
 
 // Scan implements the Scanner interface.
-func (t *Timestamp) Scan(value interface{}) error {
+func (t *Timestamp) Scan(value any) error {
 	t.Timestamp = value.(time.Time)
 	return nil
 }
@@ -41,7 +41,7 @@ type NullTimestamp struct {
 }
 
 // Scan implements the Scanner interface.
-func (t *NullTimestamp) Scan(value interface{}) error {
+func (t *NullTimestamp) Scan(value any) error {
 	var ok bool
 	t.Timestamp, ok = value.(time.Time)
 	if !ok {

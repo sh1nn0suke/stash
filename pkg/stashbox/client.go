@@ -47,7 +47,7 @@ func MaxRequestsPerMinute(n int) ClientOption {
 }
 
 func setApiKeyHeader(apiKey string) clientv2.RequestInterceptor {
-	return func(ctx context.Context, req *http.Request, gqlInfo *clientv2.GQLRequestInfo, res interface{}, next clientv2.RequestInterceptorFunc) error {
+	return func(ctx context.Context, req *http.Request, gqlInfo *clientv2.GQLRequestInfo, res any, next clientv2.RequestInterceptorFunc) error {
 		req.Header.Set("ApiKey", apiKey)
 		return next(ctx, req, gqlInfo, res)
 	}
@@ -64,7 +64,7 @@ func setUserAgentHeader() clientv2.RequestInterceptor {
 	}
 	ua := "stash/" + v
 
-	return func(ctx context.Context, req *http.Request, gqlInfo *clientv2.GQLRequestInfo, res interface{}, next clientv2.RequestInterceptorFunc) error {
+	return func(ctx context.Context, req *http.Request, gqlInfo *clientv2.GQLRequestInfo, res any, next clientv2.RequestInterceptorFunc) error {
 		req.Header.Set("User-Agent", ua)
 		return next(ctx, req, gqlInfo, res)
 	}
@@ -74,7 +74,7 @@ func rateLimit(n int) clientv2.RequestInterceptor {
 	perSec := float64(n) / 60
 	limiter := rate.NewLimiter(rate.Limit(perSec), 1)
 
-	return func(ctx context.Context, req *http.Request, gqlInfo *clientv2.GQLRequestInfo, res interface{}, next clientv2.RequestInterceptorFunc) error {
+	return func(ctx context.Context, req *http.Request, gqlInfo *clientv2.GQLRequestInfo, res any, next clientv2.RequestInterceptorFunc) error {
 		if err := limiter.Wait(ctx); err != nil {
 			// should only happen if the context is canceled
 			return err

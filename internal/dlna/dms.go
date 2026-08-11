@@ -292,15 +292,15 @@ type UPnPService interface {
 }
 
 type Cache interface {
-	Set(key interface{}, value interface{})
-	Get(key interface{}) (value interface{}, ok bool)
+	Set(key any, value any)
+	Get(key any) (value any, ok bool)
 }
 
 func init() {
 	startTime = time.Now()
 }
 
-func xmlMarshalOrPanic(value interface{}) []byte {
+func xmlMarshalOrPanic(value any) []byte {
 	ret, err := xml.MarshalIndent(value, "", "  ")
 	if err != nil {
 		panic(fmt.Sprintf("xmlMarshalOrPanic failed to marshal %v: %s", value, err))
@@ -373,7 +373,7 @@ func marshalSOAPResponse(sa upnp.SoapAction, args map[string]string) []byte {
 			Value:   value,
 		})
 	}
-	return []byte(fmt.Sprintf(`<u:%[1]sResponse xmlns:u="%[2]s">%[3]s</u:%[1]sResponse>`, sa.Action, sa.ServiceURN.String(), xmlMarshalOrPanic(soapArgs)))
+	return fmt.Appendf(nil, `<u:%[1]sResponse xmlns:u="%[2]s">%[3]s</u:%[1]sResponse>`, sa.Action, sa.ServiceURN.String(), xmlMarshalOrPanic(soapArgs))
 }
 
 // Handle a SOAP request and return the response arguments or UPnP error.

@@ -16,7 +16,7 @@ type FinderAliasImageGetter interface {
 	GetAliases(ctx context.Context, studioID int) ([]string, error)
 	GetImage(ctx context.Context, tagID int) ([]byte, error)
 	FindByChildTagID(ctx context.Context, childID int) ([]*models.Tag, error)
-	GetCustomFields(ctx context.Context, id int) (map[string]interface{}, error)
+	GetCustomFields(ctx context.Context, id int) (map[string]any, error)
 	models.StashIDLoader
 }
 

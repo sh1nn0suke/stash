@@ -17,8 +17,8 @@ func MarshalBoolMap(val map[string]bool) graphql.Marshaler {
 	})
 }
 
-func UnmarshalBoolMap(v interface{}) (map[string]bool, error) {
-	m, ok := v.(map[string]interface{})
+func UnmarshalBoolMap(v any) (map[string]bool, error) {
+	m, ok := v.(map[string]any)
 	if !ok {
 		return nil, fmt.Errorf("%T is not a map", v)
 	}

@@ -289,7 +289,7 @@ func (r *mutationResolver) FileSetFingerprints(ctx context.Context, input FileSe
 			toDelete = append(toDelete, i.Type)
 		} else {
 			// phashes need to be converted from string into uint64
-			var v interface{}
+			var v any
 			v = *i.Value
 
 			if i.Type == models.FingerprintTypePhash {

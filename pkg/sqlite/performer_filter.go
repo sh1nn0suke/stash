@@ -489,7 +489,7 @@ var selectPerformerOCountSQL = utils.StrFormat(
 		"LEFT JOIN {scenes_o_dates} ON {scenes_o_dates}.{scene_id} = {scenes}.id "+
 		"WHERE s.{performer_id} = {performers}.id "+
 		")",
-	map[string]interface{}{
+	map[string]any{
 		"performers_images": performersImagesTable,
 		"images":            imageTable,
 		"performer_id":      performerIDColumn,
@@ -511,7 +511,7 @@ var selectPerformerPlayCountSQL = utils.StrFormat(
 		"LEFT JOIN {scenes_view_dates} ON {scenes_view_dates}.{scene_id} = {scenes}.id "+
 		"WHERE s.{performer_id} = {performers}.id"+
 		")",
-	map[string]interface{}{
+	map[string]any{
 		"performer_id":      performerIDColumn,
 		"performers":        performerTable,
 		"performers_scenes": performersScenesTable,
@@ -692,7 +692,7 @@ func (qb *performerFilterHandler) groupsCriterionHandler(groups *models.Hierarch
 			const derivedPerformerGroupTable = "performer_group"
 
 			// Simplified approach: direct group-scene-performer relationship without hierarchy
-			var args []interface{}
+			var args []any
 			for _, val := range groups.Value {
 				args = append(args, val)
 			}

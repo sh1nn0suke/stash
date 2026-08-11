@@ -310,7 +310,7 @@ func mmmToMonth(mmm string) string {
 	return t.Format(format)[0:2]
 }
 
-func (h *sceneHolder) setField(field parserField, value interface{}) {
+func (h *sceneHolder) setField(field parserField, value any) {
 	if field.isFullDateField {
 		h.setDate(&field, value.(string))
 		return

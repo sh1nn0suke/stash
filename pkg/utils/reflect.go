@@ -4,7 +4,7 @@ import "reflect"
 
 // NotNilFields returns the matching tag values of fields from an object that are not nil.
 // Panics if the provided object is not a struct.
-func NotNilFields(subject interface{}, tag string) []string {
+func NotNilFields(subject any, tag string) []string {
 	value := reflect.ValueOf(subject)
 	structType := value.Type()
 
@@ -18,7 +18,7 @@ func NotNilFields(subject interface{}, tag string) []string {
 		field := value.Field(i)
 
 		kind := field.Type().Kind()
-		if (kind == reflect.Ptr || kind == reflect.Slice) && !field.IsNil() {
+		if (kind == reflect.Pointer || kind == reflect.Slice) && !field.IsNil() {
 			tagValue := structType.Field(i).Tag.Get(tag)
 			if tagValue != "" {
 				ret = append(ret, tagValue)

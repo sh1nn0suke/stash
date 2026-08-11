@@ -53,56 +53,56 @@ var (
 
 // Trace outputs a trace logging message to os.Stderr. Message is encoded with a
 // prefix that signifies to the server that it is a trace message.
-func Trace(args ...interface{}) {
+func Trace(args ...any) {
 	TraceLevel.Log(args...)
 }
 
 // Tracef is the equivalent of Printf outputting as a trace logging message.
-func Tracef(format string, args ...interface{}) {
+func Tracef(format string, args ...any) {
 	TraceLevel.Logf(format, args...)
 }
 
 // Debug outputs a debug logging message to os.Stderr. Message is encoded with a
 // prefix that signifies to the server that it is a debug message.
-func Debug(args ...interface{}) {
+func Debug(args ...any) {
 	DebugLevel.Log(args...)
 }
 
 // Debugf is the equivalent of Printf outputting as a debug logging message.
-func Debugf(format string, args ...interface{}) {
+func Debugf(format string, args ...any) {
 	DebugLevel.Logf(format, args...)
 }
 
 // Info outputs an info logging message to os.Stderr. Message is encoded with a
 // prefix that signifies to the server that it is an info message.
-func Info(args ...interface{}) {
+func Info(args ...any) {
 	InfoLevel.Log(args...)
 }
 
 // Infof is the equivalent of Printf outputting as an info logging message.
-func Infof(format string, args ...interface{}) {
+func Infof(format string, args ...any) {
 	InfoLevel.Logf(format, args...)
 }
 
 // Warn outputs a warning logging message to os.Stderr. Message is encoded with a
 // prefix that signifies to the server that it is a warning message.
-func Warn(args ...interface{}) {
+func Warn(args ...any) {
 	WarningLevel.Log(args...)
 }
 
 // Warnf is the equivalent of Printf outputting as a warning logging message.
-func Warnf(format string, args ...interface{}) {
+func Warnf(format string, args ...any) {
 	WarningLevel.Logf(format, args...)
 }
 
 // Error outputs an error logging message to os.Stderr. Message is encoded with a
 // prefix that signifies to the server that it is an error message.
-func Error(args ...interface{}) {
+func Error(args ...any) {
 	ErrorLevel.Log(args...)
 }
 
 // Errorf is the equivalent of Printf outputting as an error logging message.
-func Errorf(format string, args ...interface{}) {
+func Errorf(format string, args ...any) {
 	ErrorLevel.Logf(format, args...)
 }
 

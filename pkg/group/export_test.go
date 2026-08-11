@@ -54,8 +54,8 @@ var (
 	frontImageBytes = []byte("frontImageBytes")
 	backImageBytes  = []byte("backImageBytes")
 
-	emptyCustomFields = make(map[string]interface{})
-	customFields      = map[string]interface{}{
+	emptyCustomFields = make(map[string]any)
+	customFields      = map[string]any{
 		"customField1": "customValue1",
 	}
 )
@@ -95,7 +95,7 @@ func createEmptyMovie(id int) models.Group {
 	}
 }
 
-func createFullJSONMovie(studio, frontImage, backImage string, customFields map[string]interface{}) *jsonschema.Group {
+func createFullJSONMovie(studio, frontImage, backImage string, customFields map[string]any) *jsonschema.Group {
 	return &jsonschema.Group{
 		Name:       movieName,
 		Aliases:    movieAliases,
@@ -133,7 +133,7 @@ func createEmptyJSONMovie() *jsonschema.Group {
 
 type testScenario struct {
 	movie        models.Group
-	customFields map[string]interface{}
+	customFields map[string]any
 	expected     *jsonschema.Group
 	err          bool
 }

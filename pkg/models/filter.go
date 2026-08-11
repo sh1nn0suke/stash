@@ -84,7 +84,7 @@ func (e CriterionModifier) String() string {
 	return string(e)
 }
 
-func (e *CriterionModifier) UnmarshalGQL(v interface{}) error {
+func (e *CriterionModifier) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")

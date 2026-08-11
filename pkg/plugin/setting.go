@@ -32,7 +32,7 @@ func (e PluginSettingTypeEnum) String() string {
 	return string(e)
 }
 
-func (e *PluginSettingTypeEnum) UnmarshalGQL(v interface{}) error {
+func (e *PluginSettingTypeEnum) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")

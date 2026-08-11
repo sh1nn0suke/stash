@@ -19,8 +19,8 @@ func gqlErrorHandler(ctx context.Context, e error) *gqlerror.Error {
 			logger.Errorf("%s: %v", fc.Path(), e)
 
 			// log the args in debug level
-			logger.DebugFunc(func() (string, []interface{}) {
-				var args interface{}
+			logger.DebugFunc(func() (string, []any) {
+				var args any
 				args = fc.Args
 
 				s, _ := json.Marshal(args)
@@ -28,7 +28,7 @@ func gqlErrorHandler(ctx context.Context, e error) *gqlerror.Error {
 					args = string(s)
 				}
 
-				return "%s: %v", []interface{}{
+				return "%s: %v", []any{
 					fc.Path(),
 					args,
 				}

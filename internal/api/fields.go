@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"slices"
 
 	"github.com/99designs/gqlgen/graphql"
 )
@@ -14,10 +15,5 @@ func collectQueryFields(ctx context.Context) queryFields {
 }
 
 func (f queryFields) Has(field string) bool {
-	for _, v := range f {
-		if v == field {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(f, field)
 }

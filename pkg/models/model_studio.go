@@ -27,7 +27,7 @@ type Studio struct {
 type CreateStudioInput struct {
 	*Studio
 
-	CustomFields map[string]interface{} `json:"custom_fields"`
+	CustomFields map[string]any `json:"custom_fields"`
 }
 
 type UpdateStudioInput struct {

@@ -32,7 +32,7 @@ func (e RatingSystem) String() string {
 	return string(e)
 }
 
-func (e *RatingSystem) UnmarshalGQL(v interface{}) error {
+func (e *RatingSystem) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
